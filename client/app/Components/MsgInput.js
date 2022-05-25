@@ -5,17 +5,19 @@ import {View, TextInput, StyleSheet,Dimensions} from 'react-native';
 //gettting dimensions of the device
 const {width,height} = Dimensions.get('window');
 
+import {MaterialCommunityIcons} from '@expo/vector-icons';
+
 //icons
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 //color palette
-import colors from '../../Config/colors';
+import colors from '../Config/colors';
 
 const FormInput = ({labelValue, placeholderText, iconType, ...rest}) => {
   return (
     <View style={styles.inputContainer}>
       <View style={styles.iconStyle}>
-        <AntDesign name={iconType} size={25} color="white" />
+      <MaterialCommunityIcons name="chat" size={30} color={colors.primary} />
       </View>
 
       <TextInput
@@ -25,6 +27,7 @@ const FormInput = ({labelValue, placeholderText, iconType, ...rest}) => {
         placeholder={placeholderText}
         placeholderTextColor="gray"
         {...rest}
+       
       />
       
     </View>
@@ -45,7 +48,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.primary,
+    backgroundColor: colors.light,
     borderRadius:30
   },
   iconStyle: {
@@ -60,7 +63,7 @@ const styles = StyleSheet.create({
     padding: 10,
     flex: 1,
     fontSize: 16,
-    color: 'white',
+    color: 'gray',
     justifyContent: 'center',
     alignItems: 'center',
   },
