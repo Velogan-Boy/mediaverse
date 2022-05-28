@@ -29,6 +29,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "social media app"
+    "description": "A social media app"
   }
 }

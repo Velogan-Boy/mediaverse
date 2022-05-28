@@ -1,18 +1,40 @@
-import { View, Text ,Button,Alert} from 'react-native'
+import { View, Text ,Button,Alert, SafeAreaView,Image,StyleSheet,Dimensions,ScrollView} from 'react-native'
 import React from 'react';
 import {db,auth} from '../Config/firebase';
+import AppBar from '../Components/AppBar';
+import CustomButton from '../Components/CustomButton';
+import Post from '../Components/Post';
+
+
+const {width,height} = Dimensions.get('window');
 
 
 export default function HomeScreen({navigation}) {
-  const handleLogout = () => {
-    auth.signOut().then(() => {
-      navigation.replace("Login");
-    }).catch(error => Alert.alert(error.message));
- }
+
+
   return (
     <View>
-      <Text>HomeScreen</Text>
-      <Button title="log out" onPress={handleLogout}/>
+      <SafeAreaView>
+      <AppBar
+       onPress1={() => navigation.navigate("Chat")} 
+       onPress2={() => {navigation.navigate("Map")}}
+      />
+      
+    <ScrollView style={{marginBottom:150}}>
+    <Post/>
+    <Post/>
+    <Post/>
+    <Post/>
+    <Post/>
+    </ScrollView>
+
+    
+      </SafeAreaView>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+   
+
+})

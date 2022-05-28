@@ -12,7 +12,7 @@ import HomeScreen from '../Screens/HomeScreen';
 
 //for stack navigations
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import AppNavigator from './AppNavigator';
+import AppNavigator from './AppNavigator';
 
 //initialization
 const Stack = createNativeStackNavigator();
@@ -46,7 +46,7 @@ const AuthNavigator = () => {
       {/* <Stack.Screen name="OnBoarding" component={OnBoardingScreen} /> */}
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="SignUp" component={SignUpScreen} />
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Home" component={AppNavigator} />
     </Stack.Navigator>
   );
 }
