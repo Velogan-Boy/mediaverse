@@ -8,12 +8,21 @@ dotenv.config();
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import helmet from 'helmet';
+
+import { userRouter, postRouter} from './api';
+
 
 const app = express();
 
-//MIDDLEWARES
+// MIDDLEWARES
 app.use(express.json());
 app.use(cors());
+app.use(helmet());
+
+// ROUTES
+app.use('/user', userRouter);
+app.use('/post', postRouter);
 
 // SERVER
 const port = process.env.PORT || 8000;
@@ -30,6 +39,5 @@ mongoose.connect(
    (err) => {
       if (err) console.log(err);
       else console.log('✅ MongoDB connection successfull !!!');
-}
+   }
 );
-
