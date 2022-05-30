@@ -11,7 +11,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import { userRouter, postRouter , commentRouter} from './api';
+import { userRouter, postRouter, commentRouter, followerRouter } from './api';
 
 const app = express();
 
@@ -29,6 +29,7 @@ if (process.env.NODE_ENV == 'development ') {
 app.use('/user', userRouter);
 app.use('/posts', postRouter);
 app.use('/comments', commentRouter);
+app.use('/follower', followerRouter);
 
 // SERVER
 const port = process.env.PORT || 8000;

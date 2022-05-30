@@ -127,7 +127,6 @@ router.get('/trending', async (req, res) => {
 });
 
 
-
 /**
  * Route        /posts
  * Des          Create new post

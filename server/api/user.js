@@ -165,4 +165,27 @@ router.get('/', async (req, res) => {
    }
 });
 
+/**
+ * Route        /user/
+ * Des          get all socialmates
+ * Params       none
+ * Access       private
+ * Method       GET
+ **/
+
+router.get('/location',checkAuth, async (req,res) => {
+   try{
+      const user = req.user;
+      
+      
+      
+      
+      
+   }catch(err){
+      
+   }
+})
+
+
+
 export default router;
