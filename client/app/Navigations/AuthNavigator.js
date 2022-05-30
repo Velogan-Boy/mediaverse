@@ -6,6 +6,7 @@ import React,{useState,useEffect} from 'react';
 import LoginScreen from '../Screens/LoginScreen';
 import SignUpScreen from '../Screens/SignUpScreen';
 import HomeScreen from '../Screens/HomeScreen';
+import TopNavigator from '../Screens/TopNavigator';
 
 //using async storage to detect if the app is launched for the first time
 // import AsyncStorage from '@react-native-async-storage/async-storage';

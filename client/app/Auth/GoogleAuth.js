@@ -3,13 +3,14 @@ import * as firebase from 'firebase';
 import * as Google from 'expo-google-sign-in';
 
 //keys
-import {androidClientId} from '@env';
+// import {androidClientId} from '@env';
 
 
 const signInWithGoogleAsync = async() => {
-    console.log("h");
+    console.log("hello");
     
     function isUserEqual(googleUser, firebaseUser) {
+     
       if (firebaseUser) {
         var providerData = firebaseUser.providerData;
         for (var i = 0; i < providerData.length; i++) {
@@ -48,10 +49,11 @@ const signInWithGoogleAsync = async() => {
     try {
       const result = await Google.logInAsync({
         behavior: 'web',
-        androidClientId: '283979015590-blmr31e18djo77hj1u2q7b3rjdpinnqi.apps.googleusercontent.com',
+        androidClientId: '1084447560139-568isnnvscub1ae8f6bq2118huvnq8el.apps.googleusercontent.com',
         // iosClientId: YOUR_CLIENT_ID_HERE,
         scopes: ['profile', 'email'],
       });
+      console.log(result);
   
       if (result.type === 'success') {
         onSignIn(result);

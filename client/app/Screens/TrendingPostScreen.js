@@ -1,22 +1,25 @@
 import { View, Text,StyleSheet,StatusBar } from 'react-native'
-import React from 'react';
-import colors from '../Config/colors';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
+import React from 'react'
 
-export default function PostDetailsScreen() {
+import colors from '../Config/colors'
+import {MaterialCommunityIcons} from '@expo/vector-icons'
+
+export default function TrendingPostScreen() {
   return (
     <View style={styles.container}>
-        <View style={styles.header}>
 
-<MaterialCommunityIcons name="post" size={38} color={colors.light} style={{margin:8}}/>
-<Text style={styles.headerContent}>Post Details</Text>
+     <View style={styles.header}>
 
-
-</View>
+    <MaterialCommunityIcons name="map" size={38} color={colors.light} style={{margin:8}}/>
+    <Text style={styles.headerContent}>Around You</Text>
 
     </View>
+
+    </View>
+
   )
 }
+
 const styles = StyleSheet.create({
     container:{
     

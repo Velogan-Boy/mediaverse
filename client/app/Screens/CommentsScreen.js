@@ -15,33 +15,10 @@ const Chat = ({ navigation }) => {
   
     const [messages, setMessages] = useState([]);
 
- 
-    useLayoutEffect(() => {
-
-        
-        const unsubscribe = db1.collection('chats').orderBy('createdAt', 'desc').onSnapshot(
-            (snapshot => setMessages(
-                snapshot.docs.map(doc => ({
-                    _id: doc.data()._id,
-                    createdAt: doc.data().createdAt.toDate(),
-                    text: doc.data().text,
-                    user: doc.data().user,
-                }))
-            ))
-        )
-        
-
-        return unsubscribe;
-
-    }, [navigation]);
-
-
         const onSend = useCallback((messages = []) => {
 
         setMessages(previousMessages => GiftedChat.append(previousMessages,messages));
-        const { _id, createdAt, text, user,} = messages[0]
-        
-        db1.collection('chats').add({ _id, createdAt,  text, user });
+        console.log(messages[0].text);
     }, []);
 
 
@@ -51,7 +28,7 @@ const Chat = ({ navigation }) => {
          <View style={styles.header}>
 
     <MaterialCommunityIcons name="chat" size={38} color={colors.light} style={{margin:8}}/>
-    <Text style={styles.headerContent}>Global Chat</Text>
+    <Text style={styles.headerContent}>Comments</Text>
 
   
     </View>
@@ -59,6 +36,8 @@ const Chat = ({ navigation }) => {
             messages={messages}
             showAvatarForEveryMessage={true}
             onSend={messages => onSend(messages)}
+            placeholder="Type a Comment"
+            
             user={{
                 _id: auth?.currentUser?.email,
                 name: auth?.currentUser?.displayName,

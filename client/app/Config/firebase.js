@@ -1,16 +1,18 @@
 import * as firebase from "firebase";
+// import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 //keys
 // import {firebase_api_key,firebase_authDomain,firebase_databaseURL,firebase_projectId,firebase_storageBucket,firebase_messagingSenderId,firebase_appId} from "@env";
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBgzQoRNE57rqcuc9KrSesv8G6yRvWRIXI",
-  authDomain: "socialmediaapp-2a31e.firebaseapp.com",
-  projectId: "socialmediaapp-2a31e",
-  storageBucket: "socialmediaapp-2a31e.appspot.com",
-  messagingSenderId: "283979015590",
-  appId: "1:283979015590:web:3291a6159f52b96ebfdb67"
+  apiKey: "AIzaSyCikQwEzwZs3msUF_MDdjhkBh-Uv1-wBtU",
+  authDomain: "socialapp-5e56c.firebaseapp.com",
+  databaseURL: "https://socialapp-5e56c-default-rtdb.firebaseio.com",
+  projectId: "socialapp-5e56c",
+  storageBucket: "socialapp-5e56c.appspot.com",
+  messagingSenderId: "712665142853",
+  appId: "1:712665142853:web:80cc18c947ecee3515b52c"
 };
 
 // const firebaseConfig = {
@@ -31,7 +33,9 @@ if(firebase.apps.length===0){
   app = firebase.app();
 }
 
+const storage = app.storage();
+const db1 = app.firestore();
 const auth = firebase.auth();
 const db = firebase.database();
 
-export {auth,db};
+export {auth,db,db1,storage};

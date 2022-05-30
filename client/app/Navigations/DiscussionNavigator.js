@@ -6,6 +6,7 @@ import AccountScreen from '../Screens/AccountScreen';
 
 //screens
 import DiscussionScreen from '../Screens/DiscussionScreen';
+import ForumScreen from '../Screens/ForumScreen';
 
 
 //initialization
@@ -16,7 +17,7 @@ const DiscussionNavigator = () => {
     <Stack.Navigator mode="modal" screenOptions={{ headerShown: false }}>
         
       <Stack.Screen name="Discussion" component={DiscussionScreen} />
-      
+      <Stack.Screen name="Forum" component={ForumScreen} />
       
 
     </Stack.Navigator>

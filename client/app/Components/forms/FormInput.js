@@ -20,11 +20,13 @@ const FormInput = ({labelValue, placeholderText, iconType, ...rest}) => {
 
       <TextInput
         value={labelValue}
+        multiline={true}
         style={styles.input}
         numberOfLines={1}
         placeholder={placeholderText}
-        placeholderTextColor="gray"
+        placeholderTextColor="white"
         {...rest}
+        
       />
       
     </View>
@@ -63,6 +65,7 @@ const styles = StyleSheet.create({
     color: 'white',
     justifyContent: 'center',
     alignItems: 'center',
+    alignItems: 'stretch'
   },
   inputField: {
     padding: 10,

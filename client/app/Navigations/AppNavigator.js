@@ -18,10 +18,14 @@ import CustomButton from '../Components/CustomButton';
 
 //required navigators
 
+import AddPostScreen from '../Screens/AddPostScreen';
+import ChatScreen from '../Screens/ChatScreen';
+import TrendingScreen from '../Screens/TrendingScreen';
 
 import HomeNavigator from './HomeNavigator';
 import AccountNavigator from './AccountNavigator';
 import DiscussionNavigator from './DiscussionNavigator';
+import Chat from '../Screens/ChatDetailScreen';
 
 
 const AppNavigator = () => {
@@ -39,27 +43,52 @@ const AppNavigator = () => {
           ),
       }} 
       />
-      <Tab.Screen 
+         <Tab.Screen 
       name="Discussion"
       component={DiscussionNavigator}
+      options={{
+          headerTitleAlign: 'center',
+          tabBarActiveTintColor: colors.primary,
+          tabBarIcon: ({color, size}) => (
+              <MaterialCommunityIcons name="comment-multiple" color={color} size={size}/>
+          ),
+      }} 
+      />
+      <Tab.Screen 
+      name="Add Post"
+      component={AddPostScreen}
       options={({ navigation }) => ({
         tabBarButton: () => (
           <CustomButton
             size={28}
-            type="users"
+            type="plus-circle"
             style={{height:70,width:70}}
-            onPress={() => navigation.navigate("Discussion")}
+            onPress={() => navigation.navigate("AddPost")}
           />
         ),
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons
-            name="plus-search"
+            name="plus-circle"
             color={color}
             size={size}
           />
         ),
       })}
+
       />
+      
+      <Tab.Screen 
+      name="Trending"
+      component={TrendingScreen}
+      options={{
+          headerTitleAlign: 'center',
+          tabBarActiveTintColor: colors.primary,
+          tabBarIcon: ({color, size}) => (
+              <MaterialCommunityIcons name="rocket-launch" color={color} size={size}/>
+          ),
+      }} 
+      /> 
+
       <Tab.Screen 
       name="Account"
       component={AccountNavigator}
@@ -71,6 +100,7 @@ const AppNavigator = () => {
           ),
       }} 
       />
+
     </Tab.Navigator>
   )
 };
