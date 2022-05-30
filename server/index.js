@@ -9,9 +9,9 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import helmet from 'helmet';
+import morgan from 'morgan';
 
-import { userRouter, postRouter} from './api';
-
+import { userRouter, postRouter , commentRouter} from './api';
 
 const app = express();
 
@@ -19,10 +19,16 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
+app.use('/page', express.static('static'));
+
+if (process.env.NODE_ENV == 'development ') {
+   app.use(morgan('dev'));
+}
 
 // ROUTES
 app.use('/user', userRouter);
-app.use('/post', postRouter);
+app.use('/posts', postRouter);
+app.use('/comments', commentRouter);
 
 // SERVER
 const port = process.env.PORT || 8000;

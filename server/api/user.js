@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.post('/signup', async (req, res) => {
    try {
-      const { authid, username, fname, lname, email, phone, address, city, state, zip, country, latitude, longitude } = req.body;
+      const { authid, username, fname, lname, email, phone, address, city, state, zip, country, latitude, longitude, profileImg } = req.body;
 
       const existingUser = await UserModel.findOne({ email });
 
@@ -40,6 +40,7 @@ router.post('/signup', async (req, res) => {
          country,
          latitude,
          longitude,
+         profileImg,
       });
 
       return res.status(200).json({
@@ -64,9 +65,9 @@ router.post('/signup', async (req, res) => {
  * Method       GET
  **/
 
-router.get('/signin', async (req, res) => {
+router.get('/signin', checkAuth, async (req, res) => {
    try {
-      const user = await checkAuth(req, res);
+      const user = req.user;
 
       res.status(200).json({
          status: 'success',
@@ -90,9 +91,9 @@ router.get('/signin', async (req, res) => {
  * Method       PATCH
  **/
 
-router.patch('/', async (req, res) => {
+router.patch('/', checkAuth, async (req, res) => {
    try {
-      const user = await checkAuth(req, res);
+      const user = req.user;
 
       const { fname, lname, phone, address, city, state, zip, country, latitude, longitude } = req.body;
 
@@ -102,6 +103,30 @@ router.patch('/', async (req, res) => {
          status: 'success',
          message: 'User data updated successfully',
          data: editedUser,
+      });
+   } catch (err) {
+      res.status(500).json({ status: 'fail', message: 'Internal server error', error: err });
+   }
+});
+
+/**
+ * Route        /user
+ * Des          Delete user
+ * Params       none
+ * Access       public
+ * Method       DELETE
+ **/
+
+router.delete('/', checkAuth, async (req, res) => {
+   try {
+      const user = req.user;
+
+      const deletedUser = await UserModel.findByIdAndRemove(user._id);
+
+      return res.status(200).json({
+         status: 'success',
+         message: 'User deleted successfully',
+         data: deletedUser,
       });
    } catch (err) {
       res.status(500).json({ status: 'fail', message: 'Internal server error', error: err });

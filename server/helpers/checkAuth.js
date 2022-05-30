@@ -1,6 +1,6 @@
 import { UserModel } from '../models';
 
-export default async function (req, res) {
+export default async function (req, res, next) {
    const { authorization: authid } = req.headers;
 
    if (!authid) {
@@ -9,7 +9,7 @@ export default async function (req, res) {
       });
    }
 
-   const user = await UserModel.findOne({ authid: authid });
+   const user = await UserModel.findOne({ authid });
 
    if (!user) {
       return res.status(404).json({
@@ -18,5 +18,7 @@ export default async function (req, res) {
       });
    }
 
-   return user;
+   req.user = user;
+   
+   next();
 }

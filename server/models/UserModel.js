@@ -15,6 +15,7 @@ const userSchema = mongoose.Schema(
       country: String,
       latitude: Number,
       longitude: Number,
+      profileImg: String,
    },
    {
       timestamps: true,

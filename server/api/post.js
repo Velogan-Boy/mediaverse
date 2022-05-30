@@ -1,30 +1,29 @@
 import express from 'express';
 import checkAuth from '../helpers/checkAuth';
 
-import { UserModel, PostModel, HashtagModel } from '../models';
+import { UserModel, PostModel, HashtagModel, UpvoteModel, CommentModel } from '../models';
 
 const router = express.Router();
 
 /**
- * Route        /post
- * Des          Get all posts by userid
+ * Route        /posts
+ * Des          Get all posts of an user
  * Params       none
- * Access       public
+ * Access       private
  * Method       GET
  **/
 
-router.get('/', async (req, res) => {
+router.get('/', checkAuth, async (req, res) => {
    try {
-      const user = await checkAuth(req, res);
+      const user = req.user;
 
-      const posts = await PostModel.find({ userid: user._id }).populate('hashtags');
-
-      if (posts.length === 0) {
-         return res.status(404).json({
-            status: 'fail',
-            message: 'Posts not found',
-         });
-      }
+      const posts = await PostModel.find({ userid: user._id }).populate({
+         path: 'comments hashtags',
+         populate: {
+            path: 'replies',
+            model: 'Comments',
+         },
+      });
 
       return res.status(200).json({
          status: 'success',
@@ -41,16 +40,105 @@ router.get('/', async (req, res) => {
 });
 
 /**
- * Route        /post
- * Des          Create new post
+ * Route        /posts/global-trending
+ * Des          Get global trends
  * Params       none
  * Access       public
+ * Method       GET
+ **/
+
+router.get('/global-trending', async (req, res) => {
+   try {
+      const posts = await PostModel.find().populate('hashtags userid comments').sort('-createdAt').limit(15);
+
+      return res.status(200).json({
+         status: 'success',
+         results: posts.length,
+         data: posts,
+      });
+   } catch (err) {
+      res.status(500).json({
+         status: 'fail',
+         message: 'Something went wrong',
+         error: err,
+      });
+   }
+});
+
+/**
+ * Route        /posts/:id
+ * Des          Get post of any user
+ * Params       id
+ * Access       public
+ * Method       GET
+ **/
+
+router.get('/post/:postid', async (req, res) => {
+   try {
+      const post = await PostModel.findById(req.params.postid).populate('hashtags comments');
+
+      return res.status(200).json({
+         status: 'success',
+         data: post,
+      });
+   } catch (err) {
+      return res.status(500).json({
+         status: 'fail',
+         message: 'Something went wrong',
+         error: err,
+      });
+   }
+});
+
+/**
+ * Route        /posts/trending
+ * Des          Get Trending post
+ * Params       none
+ * Access       public
+ * Method       GET
+ **/
+
+router.get('/trending', async (req, res) => {
+   try {
+      const trendingHashtags = await HashtagModel.find().sort('-count').limit(10);
+
+      let posts = new Array();
+
+      for (const item of trendingHashtags) {
+         const trendingPost = await PostModel.find({ hashtags: { $in: item._id } })
+            .sort('-upvotes')
+            .limit(1);
+
+         posts.push({ hashtag: item, post: trendingPost });
+      }
+
+      res.status(200).json({
+         status: 'success',
+         result: posts.length,
+         data: posts,
+      });
+   } catch (err) {
+      return res.status(500).json({
+         status: 'fail',
+         message: 'Internal server error',
+         error: err,
+      });
+   }
+});
+
+
+
+/**
+ * Route        /posts
+ * Des          Create new post
+ * Params       none
+ * Access       private
  * Method       POST
  **/
 
-router.post('/', async (req, res) => {
+router.post('/', checkAuth, async (req, res) => {
    try {
-      const user = await checkAuth(req, res);
+      const user = req.user;
 
       const { type, caption, imageURL, location, hashtags: _hashtags } = req.body;
 
@@ -112,27 +200,18 @@ router.post('/', async (req, res) => {
 });
 
 /**
- * Route        /post
+ * Route        /post/:postid
  * Des          Edit post
- * Params       none
- * Access       public
- * Method       PUT
+ * Params       postid
+ * Access       private
+ * Method       PATCH
  **/
 
-router.patch('/:postid', async (req, res) => {
+router.patch('/post/:postid', checkAuth, async (req, res) => {
    try {
       const { postid } = req.params;
-      const { authorization: authid } = req.headers;
-      const { type, content, location } = req.body;
-
-      const user = await UserModel.findOne({ userid: authid });
-
-      if (!user) {
-         return res.status(404).json({
-            status: 'fail',
-            message: 'User not found',
-         });
-      }
+      const { content, location } = req.body;
+      const user = req.user;
 
       const post = await PostModel.findOne({ _id: postid });
 
@@ -143,17 +222,16 @@ router.patch('/:postid', async (req, res) => {
          });
       }
 
-      // if (post.userid !== user._id) {
-      //    return res.status(401).json({
-      //       status: 'fail',
-      //       message: 'Unauthorized',
-      //    });
-      // }
+      if (post.userid === JSON.stringify(user._id)) {
+         return res.status(401).json({
+            status: 'fail',
+            message: 'Unauthorized',
+         });
+      }
 
       const updatedPost = await PostModel.findOneAndUpdate(
          { _id: postid },
          {
-            type,
             content,
             location,
          }
@@ -169,72 +247,16 @@ router.patch('/:postid', async (req, res) => {
 });
 
 /**
- * Route        /post/trending
- * Des          Get Trending post
- * Params       none
- * Access       public
- * Method       GET
+ * Route        /post/:postid/upvote
+ * Des          Upvote post
+ * Params       postid
+ * Access       private
+ * Method       PATCH
  **/
-
-router.get('/trending', async (req, res) => {
+router.patch('/:postid/upvote', checkAuth, async (req, res) => {
    try {
-      const trendingHashtags = await HashtagModel.find().sort('-count').limit(10);
-
-      let posts = new Array();
-
-      for (const item of trendingHashtags) {
-         const trendingPost = await PostModel.find({ hashtags: { $in: item._id } })
-            .sort('-upvotes')
-            .limit(1);
-
-         posts.push(trendingPost);
-      }
-      
-      res.status(200).json({
-         status:'success',
-         result: posts.length,
-         data: posts
-      })
-      
-      
-   } catch (err) {
-      return res.status(500).json({
-         status: 'fail',
-         message: 'Internal server error',
-         error: err,
-      });
-   }
-});
-
-/**
- * Route        /post
- * Des          Delete post
- * Params       none
- * Access       public
- * Method       POST
- **/
-
-router.delete('/:postid', async (req, res) => {
-   try {
-      const { authorization: authid } = req.headers;
-
-      if (!authid) {
-         return res.status(401).json({
-            status: 'fail',
-            message: 'Unauthorized',
-         });
-      }
-
-      const { postid } = req.params;
-
-      const user = await UserModel.findOne({ userid: authid });
-
-      if (!user) {
-         return res.status(404).json({
-            status: 'fail',
-            message: 'User not found',
-         });
-      }
+      const user = req.user;
+      const postid = req.params.postid;
 
       const post = await PostModel.findOne({ _id: postid });
 
@@ -245,20 +267,82 @@ router.delete('/:postid', async (req, res) => {
          });
       }
 
-      // console.log(user._id);
-      // console.log(post.userid);
+      const isAlreadyUpvoted = await UpvoteModel.findOne({
+         userid: user._id,
+         postid: post._id,
+      });
 
-      // if (post.userid !== user._id) {
-      //    return res.status(401).json({
-      //       status: 'fail',
-      //       message: 'Unauthorized',
-      //    });
-      // }
+      if (!isAlreadyUpvoted) {
+         await PostModel.findOneAndUpdate(
+            { _id: postid },
+            {
+               upvotes: post.upvotes + 1,
+            }
+         );
+
+         await UpvoteModel.create({
+            userid: user._id,
+            postid: post._id,
+         });
+
+         return res.status(200).json({
+            status: 'success',
+            message: `Post Upvoted by user @${user.username}`,
+         });
+      } else {
+         await PostModel.findByIdAndUpdate(postid, {
+            upvotes: post.upvotes - 1,
+         });
+
+         await UpvoteModel.findOneAndDelete({
+            userid: user._id,
+            postid: post._id,
+         });
+
+         return res.status(200).json({
+            status: 'success',
+            message: `Post Upvote removed by user @${user.username}`,
+         });
+      }
+   } catch (err) {
+      res.status(500).json({ status: 'fail', message: 'Internal server error', error: err });
+   }
+});
+
+/**
+ * Route        posts/post/:postid
+ * Des          Delete post
+ * Params       postid
+ * Access       private
+ * Method       POST
+ **/
+
+router.delete('/post/:postid', checkAuth, async (req, res) => {
+   try {
+      const { postid } = req.params;
+      const user = req.user;
+
+      const post = await PostModel.findById(postid);
+
+      if (!post) {
+         return res.status(404).json({
+            status: 'fail',
+            message: 'Post not found',
+         });
+      }
+
+      if (JSON.stringify(post.userid) !== JSON.stringify(user._id)) {
+         return res.status(401).json({
+            status: 'fail',
+            message: 'Unauthorized',
+         });
+      }
 
       const deletedPost = await PostModel.findOneAndDelete({ _id: postid });
 
       return res.status(200).json({
          status: 'success',
+         message: 'Post deleted successfully',
          data: deletedPost,
       });
    } catch (err) {
@@ -269,5 +353,6 @@ router.delete('/:postid', async (req, res) => {
       });
    }
 });
+
 
 export default router;
