@@ -1,6 +1,7 @@
 import { UserModel } from '../models';
+import catchAsync from '../utils/catchAsync';
 
-export default async function (req, res, next) {
+const checkAuth = catchAsync(async function (req, res, next) {
    const { authorization: authid } = req.headers;
 
    if (!authid) {
@@ -19,6 +20,8 @@ export default async function (req, res, next) {
    }
 
    req.user = user;
-   
+
    next();
-}
+});
+
+export default checkAuth;
