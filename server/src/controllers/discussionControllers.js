@@ -19,7 +19,7 @@ export const getAllQuestionBasedOnTopic = catchAsync(async (req, res) => {
 });
 
 export const getTrendingQuestions = catchAsync(async (req, res) => {
-   const questions = await QuestionModel.find().limit(5);
+   const questions = await QuestionModel.find().limit(5).populate('topic');
 
    // sort question based on answer count
    const sortedQuestions = questions.sort((a, b) => b.answers.length - a.answers.length);

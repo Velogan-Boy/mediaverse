@@ -1,6 +1,6 @@
 import checkAuth from '../helpers/checkAuth';
 import { CommentModel, PostModel, UserModel } from '../models';
-import catchAsync from '../src/utils/catchAsync';
+import catchAsync from '../utils/catchAsync';
 
 export const userSignUp = catchAsync(async (req, res, next) => {
    const { authid, username, fname, lname, email, latitude, longitude, profileImg } = req.body;
