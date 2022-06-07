@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const questionSchema = mongoose.Schema({
    userid: { type: mongoose.Types.ObjectId, ref: 'Users' },
@@ -10,6 +10,6 @@ const questionSchema = mongoose.Schema({
    timestamps: true,
 });
 
-const questionModel = mongoose.model('Questions', questionSchema);
+const QuestionModel = mongoose.model('Questions', questionSchema);
 
-export default questionModel;
+module.exports = QuestionModel;

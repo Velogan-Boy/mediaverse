@@ -1,20 +1,9 @@
-"use strict";
+const express = require('express');
+const checkAuth = require('../helpers/checkAuth');
+const { commentOnPost, deleteCommentOfAPost, getCommentsOfAPost, replyOnComment } = require('../controllers/commentControllers');
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
+const router = express.Router();
 
-var _express = _interopRequireDefault(require("express"));
+router.get('/:postid', getCommentsOfAPost).post('/post/:postid', checkAuth, commentOnPost).post('/:commentid', checkAuth, replyOnComment).delete('/:postid/:commentid', checkAuth, deleteCommentOfAPost);
 
-var _checkAuth = _interopRequireDefault(require("../helpers/checkAuth"));
-
-var _commentControllers = require("../controllers/commentControllers");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var router = _express["default"].Router();
-
-router.get('/:postid', _commentControllers.getCommentsOfAPost).post('/post/:postid', _checkAuth["default"], _commentControllers.commentOnPost).post('/:commentid', _checkAuth["default"], _commentControllers.replyOnComment)["delete"]('/:postid/:commentid', _checkAuth["default"], _commentControllers.deleteCommentOfAPost);
-var _default = router;
-exports["default"] = _default;
+module.exports = router;

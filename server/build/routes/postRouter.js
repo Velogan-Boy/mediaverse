@@ -1,20 +1,21 @@
-"use strict";
+const express = require('express');
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
+const {
+   getAllPostsOfAnUser,
+   getAllPostsOfAnUserByUserId,
+   getUserFeed,
+   getPostByPostId,
+   getTrendingPosts,
+   createNewPost,
+   updatePostByPostId,
+   upvotePostAndRemoveUpvote,
+   deletePostByPostId
+} = require('../controllers/postControllers');
 
-var _express = _interopRequireDefault(require("express"));
+const checkAuth = require('../helpers/checkAuth');
 
-var _postControllers = require("../controllers/postControllers");
+const router = express.Router();
 
-var _checkAuth = _interopRequireDefault(require("../helpers/checkAuth"));
+router.get('/', checkAuth, getAllPostsOfAnUser).get('/user/:userid', getAllPostsOfAnUserByUserId).get('/feed', checkAuth, getUserFeed).get('/post/:postid', getPostByPostId).get('/trending', getTrendingPosts).post('/', checkAuth, createNewPost).patch('/post/:postid', checkAuth, updatePostByPostId).patch('/upvote/:postid', checkAuth, upvotePostAndRemoveUpvote).delete('/post/:postid', checkAuth, deletePostByPostId);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var router = _express["default"].Router();
-
-router.get('/', _checkAuth["default"], _postControllers.getAllPostsOfAnUser).get('/user/:userid', _postControllers.getAllPostsOfAnUserByUserId).get('/feed', _checkAuth["default"], _postControllers.getUserFeed).get('/post/:postid', _postControllers.getPostByPostId).get('/trending', _postControllers.getTrendingPosts).post('/', _checkAuth["default"], _postControllers.createNewPost).patch('/post/:postid', _checkAuth["default"], _postControllers.updatePostByPostId).patch('/upvote/:postid', _checkAuth["default"], _postControllers.upvotePostAndRemoveUpvote)["delete"]('/post/:postid', _checkAuth["default"], _postControllers.deletePostByPostId);
-var _default = router;
-exports["default"] = _default;
+module.exports = router;

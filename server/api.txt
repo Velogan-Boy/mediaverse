@@ -39,9 +39,8 @@ DISCUSSION RELATED ROUTES:
 	*Post a new question - POST /discussions/questions
 	*Post a new answer - POST /discussions/questions/answer/:questionid
 		
-	
-	
-	
+		
+
 	
 	
 	

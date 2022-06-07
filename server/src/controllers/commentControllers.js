@@ -1,9 +1,8 @@
-import checkAuth from '../helpers/checkAuth';
+const checkAuth = require('../helpers/checkAuth');
+const { CommentModel, PostModel, UserModel } = require('../models');
+const catchAsync = require('../utils/catchAsync');
 
-import { CommentModel, PostModel, UserModel } from '../models';
-import catchAsync from '../utils/catchAsync';
-
-export const getCommentsOfAPost = catchAsync(async (req, res) => {
+exports.getCommentsOfAPost = catchAsync(async (req, res) => {
    const postid = req.params.postid;
 
    const post = await PostModel.findById(postid).populate({
@@ -34,7 +33,7 @@ export const getCommentsOfAPost = catchAsync(async (req, res) => {
    });
 });
 
-export const commentOnPost = catchAsync(async (req, res) => {
+exports.commentOnPost = catchAsync(async (req, res) => {
    const postid = req.params.postid;
    const user = req.user;
    const comment = req.body.comment;
@@ -56,7 +55,7 @@ export const commentOnPost = catchAsync(async (req, res) => {
    });
 });
 
-export const replyOnComment = catchAsync(async (req, res) => {
+exports.replyOnComment = catchAsync(async (req, res) => {
    const commentid = req.params.commentid;
    const user = req.user;
    const comment = req.body.comment;
@@ -85,9 +84,7 @@ export const replyOnComment = catchAsync(async (req, res) => {
    });
 });
 
-
-
-export const deleteCommentOfAPost = catchAsync(async (req, res) => {
+exports.deleteCommentOfAPost = catchAsync(async (req, res) => {
    const { postid, commentid } = req.params;
    const user = req.user;
 

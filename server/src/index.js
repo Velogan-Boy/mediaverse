@@ -2,16 +2,16 @@ require('@babel/core').transform('code', {
    presets: ['@babel/preset-env'],
 });
 
-import dotenv from 'dotenv';
+const dotenv = require('dotenv');
 dotenv.config();
 
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import helmet from 'helmet';
-import morgan from 'morgan';
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
 
-import { userRouter, postRouter, commentRouter, discussionRouter } from './routes';
+const { userRouter, postRouter, commentRouter, discussionRouter } = require('./routes');
 
 const app = express();
 
@@ -24,6 +24,8 @@ app.use('/page', express.static('static'));
 if (process.env.NODE_ENV == 'development ') {
    app.use(morgan('dev'));
 }
+
+
 
 // ROUTES
 app.use('/users', userRouter);

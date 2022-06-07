@@ -1,5 +1,5 @@
-import { UserModel } from '../models';
-import catchAsync from '../utils/catchAsync';
+const { UserModel } = require('../models');
+const catchAsync = require('../utils/catchAsync');
 
 const checkAuth = catchAsync(async function (req, res, next) {
    const { authorization: authid } = req.headers;
@@ -24,4 +24,4 @@ const checkAuth = catchAsync(async function (req, res, next) {
    next();
 });
 
-export default checkAuth;
+module.exports = checkAuth;

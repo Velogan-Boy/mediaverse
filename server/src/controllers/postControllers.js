@@ -1,8 +1,8 @@
-import catchAsync from '../utils/catchAsync';
-import checkAuth from '../helpers/checkAuth';
-import { UserModel, PostModel, HashtagModel, UpvoteModel, CommentModel } from '../models';
+const catchAsync = require('../utils/catchAsync');
+const checkAuth = require('../helpers/checkAuth');
+const { UserModel, PostModel, HashtagModel, UpvoteModel, CommentModel } = require('../models');
 
-export const getAllPostsOfAnUser = catchAsync(async (req, res) => {
+exports. getAllPostsOfAnUser = catchAsync(async (req, res) => {
    const user = req.user;
 
    const posts = await PostModel.find({ userid: user._id });
@@ -14,7 +14,7 @@ export const getAllPostsOfAnUser = catchAsync(async (req, res) => {
    });
 });
 
-export const getAllPostsOfAnUserByUserId = catchAsync(async (req, res) => {
+exports. getAllPostsOfAnUserByUserId = catchAsync(async (req, res) => {
    const user = await UserModel.findById(req.params.userid);
 
    if (!user) {
@@ -33,7 +33,7 @@ export const getAllPostsOfAnUserByUserId = catchAsync(async (req, res) => {
    });
 });
 
-export const getUserFeed = catchAsync(async (req, res) => {
+exports. getUserFeed = catchAsync(async (req, res) => {
    const user = req.user;
 
    let posts = await PostModel.find()
@@ -69,7 +69,7 @@ export const getUserFeed = catchAsync(async (req, res) => {
    });
 });
 
-export const getPostByPostId = catchAsync(async (req, res) => {
+exports. getPostByPostId = catchAsync(async (req, res) => {
    const post = await PostModel.findById(req.params.postid).populate('userid hashtags comments');
 
    return res.status(200).json({
@@ -78,7 +78,7 @@ export const getPostByPostId = catchAsync(async (req, res) => {
    });
 });
 
-export const getTrendingPosts = catchAsync(async (req, res) => {
+exports. getTrendingPosts = catchAsync(async (req, res) => {
    const trendingHashtags = await HashtagModel.find().sort('-count').limit(10);
 
    let posts = new Array();
@@ -99,7 +99,7 @@ export const getTrendingPosts = catchAsync(async (req, res) => {
    });
 });
 
-export const createNewPost = catchAsync(async (req, res) => {
+exports. createNewPost = catchAsync(async (req, res) => {
    const user = req.user;
 
    const { type, caption, imageURL, location, hashtags: _hashtags } = req.body;
@@ -158,7 +158,7 @@ export const createNewPost = catchAsync(async (req, res) => {
    });
 });
 
-export const updatePostByPostId = catchAsync(async (req, res) => {
+exports. updatePostByPostId = catchAsync(async (req, res) => {
    const { postid } = req.params;
    const { caption, location } = req.body;
    const user = req.user;
@@ -193,7 +193,7 @@ export const updatePostByPostId = catchAsync(async (req, res) => {
    });
 });
 
-export const upvotePostAndRemoveUpvote = catchAsync(async (req, res) => {
+exports. upvotePostAndRemoveUpvote = catchAsync(async (req, res) => {
    const user = req.user;
    const postid = req.params.postid;
 
@@ -262,7 +262,7 @@ export const upvotePostAndRemoveUpvote = catchAsync(async (req, res) => {
    }
 });
 
-export const deletePostByPostId = catchAsync(async (req, res) => {
+exports. deletePostByPostId = catchAsync(async (req, res) => {
    const { postid } = req.params;
    const user = req.user;
 

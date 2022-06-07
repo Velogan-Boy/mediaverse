@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import axios from 'axios';
+const mongoose = require('mongoose');
+const axios = require('axios');
 
 const topicSchema = mongoose.Schema({
    name: String,
@@ -26,4 +26,4 @@ topicSchema.pre('save', async function (next) {
 });
 const TopicModel = mongoose.model('Topics', topicSchema);
 
-export default TopicModel;
+module.exports = TopicModel;

@@ -1,20 +1,19 @@
-"use strict";
+const express = require('express');
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
+const checkAuth = require('../helpers/checkAuth');
 
-var _express = _interopRequireDefault(require("express"));
+const {
+   getAllQuestionBasedOnTopic,
+   getQuestionByQId,
+   getTrendingQuestions,
+   searchTopic,
+   getTrendingTopics,
+   postQuestion,
+   postAnswer
+} = require('../controllers/discussionControllers');
 
-var _checkAuth = _interopRequireDefault(require("../helpers/checkAuth"));
+const router = express.Router();
 
-var _discussionControllers = require("../controllers/discussionControllers");
+router.get('/questions/topic/:topicId', getAllQuestionBasedOnTopic).get('/questions/trending', getTrendingQuestions).get('/topic/search', searchTopic).get('/questions/:questionid', getQuestionByQId).get('/topic/trending', getTrendingTopics).post('/questions', checkAuth, postQuestion).post('/questions/answer/:questionid', checkAuth, postAnswer);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var router = _express["default"].Router();
-
-router.get('/questions/topic/:topicId', _discussionControllers.getAllQuestionBasedOnTopic).get('/questions/trending', _discussionControllers.getTrendingQuestions).get('/topic/search', _discussionControllers.searchTopic).get('/questions/:questionid', _discussionControllers.getQuestionByQId).get('/topic/trending', _discussionControllers.getTrendingTopics).post('/questions', _checkAuth["default"], _discussionControllers.postQuestion).post('/questions/answer/:questionid', _checkAuth["default"], _discussionControllers.postAnswer);
-var _default = router;
-exports["default"] = _default;
+module.exports = router;

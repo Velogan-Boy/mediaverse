@@ -1,10 +1,10 @@
-import UserModel from './UserModel';
-import PostModel from './PostModel';
-import CommentModel from './CommentModel';
-import HashtagModel from './HashtagModel';
-import UpvoteModel from './UpvoteModel';
-import QuestionModel from './QuestionModel';
-import TopicModel from './TopicModel';
-import AnswerModel from './AnswerModel';
+const UserModel = require('./UserModel');
+const PostModel = require('./PostModel');
+const CommentModel = require('./CommentModel');
+const HashtagModel = require('./HashtagModel');
+const UpvoteModel = require('./UpvoteModel');
+const QuestionModel = require('./QuestionModel');
+const TopicModel = require('./TopicModel');
+const AnswerModel = require('./AnswerModel');
 
-export { UserModel, PostModel, CommentModel, HashtagModel, UpvoteModel, QuestionModel, TopicModel, AnswerModel };
+module.exports = { UserModel, PostModel, CommentModel, HashtagModel, UpvoteModel, QuestionModel, TopicModel, AnswerModel };

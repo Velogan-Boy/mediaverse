@@ -1,52 +1,49 @@
-"use strict";
-
-var _dotenv = _interopRequireDefault(require("dotenv"));
-
-var _express = _interopRequireDefault(require("express"));
-
-var _mongoose = _interopRequireDefault(require("mongoose"));
-
-var _cors = _interopRequireDefault(require("cors"));
-
-var _helmet = _interopRequireDefault(require("helmet"));
-
-var _morgan = _interopRequireDefault(require("morgan"));
-
-var _routes = require("./routes");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
 require('@babel/core').transform('code', {
-  presets: ['@babel/preset-env']
+   presets: ['@babel/preset-env']
 });
 
-_dotenv["default"].config();
+const dotenv = require('dotenv');
+dotenv.config();
 
-var app = (0, _express["default"])(); // MIDDLEWARES
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
 
-app.use(_express["default"].json());
-app.use((0, _cors["default"])());
-app.use((0, _helmet["default"])());
-app.use('/page', _express["default"]["static"]('static'));
+const { userRouter, postRouter, commentRouter, discussionRouter } = require('./routes');
+
+const app = express();
+
+// MIDDLEWARES
+app.use(express.json());
+app.use(cors());
+app.use(helmet());
+app.use('/page', express.static('static'));
 
 if (process.env.NODE_ENV == 'development ') {
-  app.use((0, _morgan["default"])('dev'));
-} // ROUTES
+   app.use(morgan('dev'));
+}
 
-
-app.use('/users', _routes.userRouter);
-app.use('/posts', _routes.postRouter);
-app.use('/comments', _routes.commentRouter);
-app.use('/discussions', _routes.discussionRouter); // SERVER
-
-var port = process.env.PORT || 8000;
-app.listen(port, function () {
-  console.log("\u2705 Server is running on port ".concat(port, " !!!"));
+app.get('/', function (req, res) {
+   res.redirect('/page');
 });
 
-_mongoose["default"].connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}, function (err) {
-  if (err) console.log(err);else console.log('✅ MongoDB connection successfull !!!');
+// ROUTES
+app.use('/users', userRouter);
+app.use('/posts', postRouter);
+app.use('/comments', commentRouter);
+app.use('/discussions', discussionRouter);
+
+// SERVER
+const port = process.env.PORT || 8000;
+app.listen(port, () => {
+   console.log(`✅ Server is running on port ${port} !!!`);
+});
+
+mongoose.connect(process.env.MONGODB_URI, {
+   useNewUrlParser: true,
+   useUnifiedTopology: true
+}, err => {
+   if (err) console.log(err);else console.log('✅ MongoDB connection successfull !!!');
 });

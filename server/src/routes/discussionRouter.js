@@ -1,8 +1,16 @@
-import express from 'express';
+const express = require('express');
 
-import checkAuth from '../helpers/checkAuth';
+const checkAuth = require('../helpers/checkAuth');
 
-import { getAllQuestionBasedOnTopic, getQuestionByQId, getTrendingQuestions, searchTopic, getTrendingTopics, postQuestion,postAnswer } from '../controllers/discussionControllers';
+const {
+   getAllQuestionBasedOnTopic,
+   getQuestionByQId,
+   getTrendingQuestions,
+   searchTopic,
+   getTrendingTopics,
+   postQuestion,
+   postAnswer,
+} = require('../controllers/discussionControllers');
 
 const router = express.Router();
 
@@ -15,4 +23,4 @@ router
    .post('/questions', checkAuth, postQuestion)
    .post('/questions/answer/:questionid', checkAuth, postAnswer);
 
-export default router;
+module.exports = router;

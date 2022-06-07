@@ -1,6 +1,6 @@
-import express from 'express';
+const express = require('express');
 
-import {
+const {
    getAllPostsOfAnUser,
    getAllPostsOfAnUserByUserId,
    getUserFeed,
@@ -10,8 +10,9 @@ import {
    updatePostByPostId,
    upvotePostAndRemoveUpvote,
    deletePostByPostId,
-} from '../controllers/postControllers';
-import checkAuth from '../helpers/checkAuth';
+} = require('../controllers/postControllers');
+
+const checkAuth = require('../helpers/checkAuth');
 
 const router = express.Router();
 
@@ -26,4 +27,4 @@ router
    .patch('/upvote/:postid', checkAuth, upvotePostAndRemoveUpvote)
    .delete('/post/:postid', checkAuth, deletePostByPostId);
 
-export default router;
+module.exports = router;

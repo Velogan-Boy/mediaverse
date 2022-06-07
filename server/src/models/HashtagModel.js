@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import axios from 'axios';
+const mongoose = require('mongoose');
+const axios = require('axios');
 
 const HashtagSchema = mongoose.Schema({
    name: String,
@@ -16,7 +16,7 @@ HashtagSchema.pre('save', async function (next) {
       });
 
       if (response.data.photos.length > 0) {
-         const {src } = response.data.photos[0];
+         const { src } = response.data.photos[0];
          this.cover = src.landscape;
       } else {
          this.cover = 'https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260';
@@ -28,4 +28,4 @@ HashtagSchema.pre('save', async function (next) {
 
 const HashtagModel = mongoose.model('Hashtags', HashtagSchema);
 
-export default HashtagModel;
+module.exports = HashtagModel;

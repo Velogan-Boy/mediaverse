@@ -1,7 +1,7 @@
-import catchAsync from '../utils/catchAsync';
-import { TopicModel, QuestionModel, AnswerModel, UpvoteAnswerModel } from '../models';
+const catchAsync = require('../utils/catchAsync');
+const { TopicModel, QuestionModel, AnswerModel, UpvoteAnswerModel } = require('../models');
 
-export const getAllQuestionBasedOnTopic = catchAsync(async (req, res) => {
+exports.getAllQuestionBasedOnTopic = catchAsync(async (req, res) => {
    const topic = await TopicModel.findById(req.params.topicId);
 
    if (!topic) {
@@ -18,7 +18,7 @@ export const getAllQuestionBasedOnTopic = catchAsync(async (req, res) => {
    });
 });
 
-export const getTrendingQuestions = catchAsync(async (req, res) => {
+exports.getTrendingQuestions = catchAsync(async (req, res) => {
    const questions = await QuestionModel.find().limit(5).populate('topic');
 
    // sort question based on answer count
@@ -31,12 +31,17 @@ export const getTrendingQuestions = catchAsync(async (req, res) => {
    });
 });
 
-export const getQuestionByQId = catchAsync(async (req, res) => {
+exports.getQuestionByQId = catchAsync(async (req, res) => {
    const { questionid } = req.params;
-   
-   console.log(questionid);
 
-   const question = await QuestionModel.findById(questionid).populate('userid topic answers');
+   const question = await QuestionModel.findById(questionid)
+      .populate('userid topic answers')
+      .populate({
+         path: 'answers',
+         populate: {
+            path: 'userid',
+         },
+      });
 
    res.status(200).json({
       status: 'success',
@@ -44,7 +49,7 @@ export const getQuestionByQId = catchAsync(async (req, res) => {
    });
 });
 
-export const searchTopic = catchAsync(async (req, res) => {
+exports.searchTopic = catchAsync(async (req, res) => {
    const { keyword } = req.query;
 
    const topics = await TopicModel.find({
@@ -58,7 +63,7 @@ export const searchTopic = catchAsync(async (req, res) => {
    });
 });
 
-export const getTrendingTopics = catchAsync(async (req, res) => {
+exports.getTrendingTopics = catchAsync(async (req, res) => {
    const topics = await TopicModel.find().sort('-count').limit(3);
 
    res.status(200).json({
@@ -68,7 +73,7 @@ export const getTrendingTopics = catchAsync(async (req, res) => {
    });
 });
 
-export const postQuestion = catchAsync(async (req, res) => {
+exports.postQuestion = catchAsync(async (req, res) => {
    const user = req.user;
 
    const { topic, question, description } = req.body;
@@ -77,7 +82,7 @@ export const postQuestion = catchAsync(async (req, res) => {
    const topicExists = await TopicModel.findOne({ name: new RegExp(topic, 'i') });
 
    if (!topicExists) {
-      const newTopic = await TopicModel.create({ name: topic });
+      const newTopic = await TopicModel.create({ name: topic, count: 1 });
 
       const newQuestion = await QuestionModel.create({
          userid: user._id,
@@ -107,7 +112,7 @@ export const postQuestion = catchAsync(async (req, res) => {
    });
 });
 
-export const postAnswer = catchAsync(async (req, res) => {
+exports.postAnswer = catchAsync(async (req, res) => {
    const user = req.user;
 
    const { questionid } = req.params;

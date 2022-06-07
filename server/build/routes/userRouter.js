@@ -1,20 +1,22 @@
-"use strict";
+const express = require('express');
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports["default"] = void 0;
+const checkAuth = require('../helpers/checkAuth');
+const {
+   userSignIn,
+   userSignUp,
+   getUserById,
+   searchUser,
+   editUser,
+   deleteUser,
+   getAllUsers,
+   followOrUnfollowUser,
+   getAllFollowersOfAnUser,
+   getAllFollowingsOfAnUser,
+   removeFollower
+} = require('../controllers/userControllers');
 
-var _express = _interopRequireDefault(require("express"));
+const router = express.Router();
 
-var _checkAuth = _interopRequireDefault(require("../helpers/checkAuth"));
+router.get('/signin', checkAuth, userSignIn).post('/signup', userSignUp).get('/user/:userid', getUserById).get('/search', searchUser).patch('/', checkAuth, editUser).delete('/', checkAuth, deleteUser).get('/', getAllUsers).get('/follow/:followingUserId', checkAuth, followOrUnfollowUser).get('/followers', checkAuth, getAllFollowersOfAnUser).get('/following', checkAuth, getAllFollowingsOfAnUser).delete('/follower/:followerUserId', checkAuth, removeFollower);
 
-var _userControllers = require("../controllers/userControllers");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-var router = _express["default"].Router();
-
-router.get('/signin', _checkAuth["default"], _userControllers.userSignIn).post('/signup', _userControllers.userSignUp).get('/user/:userid', _userControllers.getUserById).get('/search', _userControllers.searchUser).patch('/', _checkAuth["default"], _userControllers.editUser)["delete"]('/', _checkAuth["default"], _userControllers.deleteUser).get('/', _userControllers.getAllUsers).get('/follow/:followingUserId', _checkAuth["default"], _userControllers.followOrUnfollowUser).get('/followers', _checkAuth["default"], _userControllers.getAllFollowersOfAnUser).get('/following', _checkAuth["default"], _userControllers.getAllFollowingsOfAnUser)["delete"]('/follower/:followerUserId', _checkAuth["default"], _userControllers.removeFollower);
-var _default = router;
-exports["default"] = _default;
+module.exports = router;

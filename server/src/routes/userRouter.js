@@ -1,7 +1,7 @@
-import express from 'express';
+const express = require('express');
 
-import checkAuth from '../helpers/checkAuth';
-import {
+const checkAuth = require('../helpers/checkAuth');
+const {
    userSignIn,
    userSignUp,
    getUserById,
@@ -13,7 +13,7 @@ import {
    getAllFollowersOfAnUser,
    getAllFollowingsOfAnUser,
    removeFollower,
-} from '../controllers/userControllers';
+} = require('../controllers/userControllers');
 
 const router = express.Router();
 
@@ -30,4 +30,4 @@ router
    .get('/following', checkAuth, getAllFollowingsOfAnUser)
    .delete('/follower/:followerUserId', checkAuth, removeFollower);
 
-export default router;
+module.exports = router;

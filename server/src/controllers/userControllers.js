@@ -1,8 +1,8 @@
-import checkAuth from '../helpers/checkAuth';
-import { CommentModel, PostModel, UserModel } from '../models';
-import catchAsync from '../utils/catchAsync';
+const checkAuth = require('../helpers/checkAuth');
+const { CommentModel, PostModel, UserModel } = require('../models');
+const catchAsync = require('../utils/catchAsync');
 
-export const userSignUp = catchAsync(async (req, res, next) => {
+exports.userSignUp = catchAsync(async (req, res, next) => {
    const { authid, username, fname, lname, email, latitude, longitude, profileImg } = req.body;
 
    const existingUser = await UserModel.findOne({ email });
@@ -32,7 +32,7 @@ export const userSignUp = catchAsync(async (req, res, next) => {
    });
 });
 
-export const userSignIn = catchAsync(async (req, res) => {
+exports.userSignIn = catchAsync(async (req, res) => {
    const user = req.user;
 
    res.status(200).json({
@@ -42,7 +42,7 @@ export const userSignIn = catchAsync(async (req, res) => {
    });
 });
 
-export const getUserById = catchAsync(async (req, res) => {
+exports.getUserById = catchAsync(async (req, res) => {
    const user = await UserModel.findById(req.params.userid);
 
    if (!user) {
@@ -59,7 +59,7 @@ export const getUserById = catchAsync(async (req, res) => {
    });
 });
 
-export const searchUser = catchAsync(async (req, res) => {
+exports.searchUser = catchAsync(async (req, res) => {
    const searchString = req.query.searchString;
 
    const users = await UserModel.find({
@@ -85,7 +85,7 @@ export const searchUser = catchAsync(async (req, res) => {
    });
 });
 
-export const editUser = catchAsync(async (req, res, next) => {
+exports.editUser = catchAsync(async (req, res, next) => {
    const user = req.user;
 
    const { fname, lname, profileImg } = req.body;
@@ -99,7 +99,7 @@ export const editUser = catchAsync(async (req, res, next) => {
    });
 });
 
-export const deleteUser = catchAsync(async (req, res, next) => {
+exports.deleteUser = catchAsync(async (req, res, next) => {
    const user = req.user;
 
    const deletedUser = await UserModel.findByIdAndRemove(user._id);
@@ -121,7 +121,7 @@ export const deleteUser = catchAsync(async (req, res, next) => {
    });
 });
 
-export const getAllUsers = catchAsync(async (req, res) => {
+exports.getAllUsers = catchAsync(async (req, res) => {
    const users = await UserModel.find();
 
    res.status(200).json({
@@ -131,7 +131,7 @@ export const getAllUsers = catchAsync(async (req, res) => {
    });
 });
 
-export const followOrUnfollowUser = catchAsync(async (req, res) => {
+exports.followOrUnfollowUser = catchAsync(async (req, res) => {
    const user = req.user;
 
    const { followingUserId } = req.params;
@@ -181,7 +181,7 @@ export const followOrUnfollowUser = catchAsync(async (req, res) => {
    }
 });
 
-export const getAllFollowersOfAnUser = catchAsync(async (req, res) => {
+exports.getAllFollowersOfAnUser = catchAsync(async (req, res) => {
    const user = req.user;
 
    const followers = await UserModel.find({
@@ -197,7 +197,7 @@ export const getAllFollowersOfAnUser = catchAsync(async (req, res) => {
    });
 });
 
-export const getAllFollowingsOfAnUser = catchAsync(async (req, res) => {
+exports.getAllFollowingsOfAnUser = catchAsync(async (req, res) => {
    const user = req.user;
 
    const following = await UserModel.find({
@@ -213,7 +213,7 @@ export const getAllFollowingsOfAnUser = catchAsync(async (req, res) => {
    });
 });
 
-export const removeFollower = catchAsync(async (req, res) => {
+exports.removeFollower = catchAsync(async (req, res) => {
    const user = req.user;
 
    const { followerUserId } = req.params;

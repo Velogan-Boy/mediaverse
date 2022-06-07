@@ -1,6 +1,6 @@
-import userRouter from './userRouter';
-import postRouter from './postRouter';
-import commentRouter from './commentRouter';
-import discussionRouter from './discussionRouter';
+const userRouter = require('./userRouter');
+const postRouter = require('./postRouter');
+const commentRouter = require('./commentRouter');
+const discussionRouter = require('./discussionRouter');
 
-export { userRouter, postRouter, commentRouter , discussionRouter};
+module.exports = { userRouter, postRouter, commentRouter, discussionRouter };
