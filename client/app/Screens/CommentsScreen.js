@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity ,Image,StatusBar} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity ,Image,StatusBar,Alert} from 'react-native';
 // import { Avatar } from 'react-native-elements';
 import { auth, db,db1} from '../Config/firebase';
 // import { signOut } from 'firebase/auth';
@@ -7,19 +7,105 @@ import { GiftedChat } from 'react-native-gifted-chat';
 
 import colors from '../Config/colors';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
+import host from '../Config/ip';
+import axios from 'axios';
 
 
 
 
-const Chat = ({ navigation }) => {
+const Chat = ({ navigation,route }) => {
+
+  const cmail = "logesh@gmail.com";
+
+  const id = route.params.id;
+  console.log(id);
+
+  const [comment, setComment] = useState([]);
+
+  useEffect(() => {
+   getComments();
+  },[]);
+
+  const getComments = async() => {
+    
+    const response = await axios.get(`${host}/comments/${id}`,{
+      headers:{
+        Authorization:auth.currentUser.uid,
+      }
+  })
+
+    setComment(
+      response.data.data.map(comment => {
+        return {
+          _id: comment._id,
+          text: comment.comment,
+          createdAt: comment.createdAt,
+          user: {
+            _id: comment.postedUser._id,
+            name: comment.postedUser.username,
+            avatar: comment.postedUser.profileImg
+          }
+        }
+      })
+    )
+    
+
+
+}
   
     const [messages, setMessages] = useState([]);
 
+
         const onSend = useCallback((messages = []) => {
 
-        setMessages(previousMessages => GiftedChat.append(previousMessages,messages));
+        setComment(previousMessages => GiftedChat.append(previousMessages,messages));
         console.log(messages[0].text);
+
+        postComment(messages[0].text);
+
+
+
     }, []);
+
+    const postComment = async(comment) => {
+      const response = await axios.post(`${host}/comments/post/${id}`,
+      {
+        comment:comment,
+      }
+      ,{
+        headers:{
+          Authorization:auth.currentUser.uid,
+        }
+      });
+    }
+
+    const handleDelete = (message) => {
+      // console.log(message);
+
+      message.user._id == cmail ? 
+      Alert.alert(
+        "Alert ! ",
+        "Are you sure you want to remove this Comment ?",
+        [
+       
+          {
+            text: "Yes",
+            onPress: () => {
+              console.log("here is post id ",message._id);
+              // db.collection('chats').doc(message._id).delete();
+            },
+          },
+         
+          {
+            text: "No",
+          },
+        ]
+      )
+      :null
+ 
+    }
+
+   
 
 
     return (
@@ -32,8 +118,12 @@ const Chat = ({ navigation }) => {
 
   
     </View>
+
+     
+
         <GiftedChat
-            messages={messages}
+            
+            messages={comment}
             showAvatarForEveryMessage={true}
             onSend={messages => onSend(messages)}
             placeholder="Type a Comment"
@@ -43,6 +133,10 @@ const Chat = ({ navigation }) => {
                 name: auth?.currentUser?.displayName,
                 // avatar: auth?.currentUser?.photoURL
                 avatar:'https://placeimg.com/140/140/any'
+            }}
+
+            onLongPress={(context, message) => {
+              handleDelete(message);
             }}
          
         />

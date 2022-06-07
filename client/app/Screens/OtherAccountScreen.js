@@ -1,4 +1,4 @@
-import { View, Text,Alert, StyleSheet, Image, FlatList,RefreshControl, TouchableHighlight,StatusBar,Dimensions, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Image, FlatList,RefreshControl,TouchableHighlight,StatusBar,Dimensions, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useEffect,useState,useCallback } from 'react';
 import { auth } from "../Config/firebase";
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -6,26 +6,30 @@ import colors from '../Config/colors'
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import host from '../Config/ip';
 import axios from 'axios';
-import LottieView from 'lottie-react-native';
-
 // import colors from '../Config/colors';
 
 //components
 import { FormBtn } from '../Components/forms';
+import { getCurrentUser } from 'expo-google-sign-in';
 
-export default function AccountScreen({ navigation }) {
+export default function AccountScreen({ navigation,route }) {
+
+ 
 
   const [user, setUser] = useState({});
   const [post, setPost] = useState([]);
   const [postcount, setPostcount] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [followers, setFollowers] = useState([]);
+
+  const [isfollowing,setIsFollowing] = useState(false);
 
   const [followingCount, setFollowingCount] = useState(0);
   const [followerCount, setFollowerCount] = useState(0);
 
-  const [out, setOut] = useState(false);
+  // console.log(route.params.id);
 
-  console.log("here is ",post);
+  // console.log("here is post",post);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -37,37 +41,45 @@ export default function AccountScreen({ navigation }) {
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, [navigation]);
- 
 
-  const getUser = async() => {
+
+
+  useEffect(() => {
+        getFollowers();
+        getUser();
+        getCurrentUser();
+
+  },[])
+
+  const getCurrentUser = async() => {
     const response = await axios.get(`${host}/users/signin`,{
       headers:{
         Authorization:auth.currentUser.uid,
       }
     });
-    const response2 = await axios.get(`${host}/posts`,{
-      headers:{
-        Authorization:auth.currentUser.uid,
-      }
-    });
 
-    setUser(response.data.data);
-    console.log("user",response.data.data);
-    setPost(response2.data.data);
-    setPostcount(response2.data.results);
-    console.log("followers",response.data.data.followers.length);
-    console.log("following",response.data.data.following.length);
-    setFollowingCount(response.data.data.following.length);
-    setFollowerCount(response.data.data.followers.length);
-    
+    if(response.data.data.following.includes(route.params.id)) {
+        setIsFollowing(true);
+    }
+
   }
 
-  const handleLogout = () => {
-    auth.signOut().then(() => {
-      setOut(true);
-      setTimeout(() =>  navigation.navigate("Login"), 2500)
-      // navigation.replace("Login");
-    }).catch(error => Alert.alert(error.message));
+
+
+  const getUser = async() => {
+    const response = await axios.get(`${host}/users/user/${route.params.id}`);
+    // console.log(response.data.data);
+
+    const response2 = await axios.get(`${host}/posts/user/${route.params.id}`);
+    // console.log(response2.data.data);
+
+    setUser(response.data.data);
+    console.log("friend user ",user.authid);
+    setPost(response2.data.data);
+    setPostcount(response2.data.results);
+    setFollowingCount(response.data.data.following.length);
+    setFollowerCount(response.data.data.followers.length);
+
   }
 
   const wait = (timeout) => {
@@ -78,59 +90,54 @@ export default function AccountScreen({ navigation }) {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
   }, []);
-  
-  const handleDeletePost = (id) => {
 
-    Alert.alert(
-      "Alert ! ",
-      "Are you sure you want to remove this Post ?",
-      [
-     
-        {
-          text: "Yes",
-          onPress: () => {
-            deletePost(id);
-            
-          },
-        },
-       
-        {
-          text: "No",
-        },
-      ]
-    )
-  }
-
-  const deletePost = async(id) => {
-    const response = await axios.delete(`${host}/posts/post/${id}`,{
+  const getFollowers = async () => {
+    const response = await axios.get(`${host}/users/following`,{
       headers:{
         Authorization:auth.currentUser.uid,
       }
     });
-
-    console.log("here is response",response.message);
-    setTimeout(() =>  getUser(), 2500)
+    console.log(response.data.data);
+    setFollowers(response.data.data);
+    
+    // setFollowerCount(response.data.data.length);
   }
 
+  const HandleFollowOrUnfollow = async(id) => {
+    console.log(id);
+     
+      const response = await axios.get(`${host}/users/follow/${id}`,{
+        headers:{
+          Authorization:auth.currentUser.uid,
+        }
+      });
 
+      console.log(response.data.status);
 
+      if(response.data.status=="success"){
+
+        setTimeout(() => {
+          getFollowers();
+          getUser();
+          getCurrentUser();
+        } ,1000);
+        setIsFollowing(id == !id);
+      }
+
+     
+
+     
+  }
 
   return (
     <ScrollView style={styles.container} >
 
-{out? 
-      <LottieView
-             autoPlay
-             loop={false}             
-             source={require("../animation/logout.json")}
-             style={{backgroundColor:colors.white,zIndex:2}}
-      />:null
-      }
+
 
      <View style={styles.header}>
 
  <MaterialCommunityIcons name="account" size={38} color={colors.light} style={{margin:8}}/>
- <Text style={styles.headerContent}>My Account</Text>
+ <Text style={styles.headerContent}>{user.username} Account</Text>
 
 
  </View>
@@ -140,7 +147,8 @@ export default function AccountScreen({ navigation }) {
         <RefreshControl
           refreshing={refreshing}
           onRefresh={onRefresh}
-        />
+    />
+
       }
       >
 
@@ -197,8 +205,15 @@ export default function AccountScreen({ navigation }) {
         fontWeight: '450',
       }}>
         {user.username}  {'  '}
-        <FontAwesome5 onPress={() => { navigation.navigate('EditProfile') }} style={{ padding: 10 }} name="user-edit" size={20} color="black" />
+       
       </Text>
+
+      <View style={{margin:20}}>
+        <FormBtn title={isfollowing?"Unfollow":"Follow"}
+        onPress={() => HandleFollowOrUnfollow(route.params.id)}
+        />
+      </View>
+
       </View>
       
   
@@ -217,21 +232,12 @@ export default function AccountScreen({ navigation }) {
         }}
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity 
-            onLongPress={() => handleDeletePost(item._id)}            
-            onPress={() => navigation.navigate("TrendingPostDetails",{postid:item._id})}>
+            <TouchableOpacity >
               <Image source={{ uri: item.imageURL }} style={styles.headerImage} />
             </TouchableOpacity>
           )
         }}
       />
-      </View>
-
-      
-
-
-      <View style={styles.logout}>
-        <FormBtn title="Logout" onPress={handleLogout} />
       </View>
 
       </ScrollView>
@@ -257,6 +263,11 @@ const styles = StyleSheet.create({
     fontSize:25,
     textAlign:"center",
   },
+  // container: {
+  //   flex: 1,
+  //   backgroundColor: 'white',
+  //   height: '100%',
+  // },
   logout: {
     margin: 40,
     marginBottom:60

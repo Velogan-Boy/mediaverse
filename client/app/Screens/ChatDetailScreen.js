@@ -14,7 +14,21 @@ import {MaterialCommunityIcons} from '@expo/vector-icons';
 const Chat = ({ navigation }) => {
   
     const [messages, setMessages] = useState([]);
+    const [user,setUser] = useState({});
+    const uid = auth.currentUser.uid;
 
+
+    const getUser = async () => {
+        db.ref('users/' + uid).on('value', (snapshot) => {
+            setUser(snapshot.val());
+        }
+        )
+        console.log(user);
+    }
+    useEffect(() => {
+        getUser();
+        
+    },[])
  
     useLayoutEffect(() => {
 
@@ -29,6 +43,7 @@ const Chat = ({ navigation }) => {
                 }))
             ))
         )
+        console.log(messages);
         
 
         return unsubscribe;
@@ -60,10 +75,9 @@ const Chat = ({ navigation }) => {
             showAvatarForEveryMessage={true}
             onSend={messages => onSend(messages)}
             user={{
-                _id: auth?.currentUser?.email,
-                name: auth?.currentUser?.displayName,
-                // avatar: auth?.currentUser?.photoURL
-                avatar:'https://placeimg.com/140/140/any'
+                _id: user.email,
+                name: user.username,
+                avatar:user.profileUrl
             }}
          
         />

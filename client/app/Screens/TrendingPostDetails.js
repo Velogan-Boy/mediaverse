@@ -16,30 +16,21 @@ let screenHeight = Dimensions.get("window").height;
 
 export default function PostDetailsScreen({navigation,route}) {
 
-  const [comment, setComment] = useState([]);
-  const [post,setPost] = useState(route.params.post);
+  const id = useState(route.params.postid);
+
+
+//   const [post,setPost] = useState(route.params.post);
   const [currentPost,setCurrentPost] = useState([]);
 
-  const id = useState(route.params.post._id);
 
 
-   
-   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      // The screen is focused
-      // Call any action and update data
-      getPost();
-    });
+  useEffect(() => {
+    getPost();
+   },[]);
 
-    // Return the function to unsubscribe from the event so it gets removed on unmount
-    return unsubscribe;
-  }, [navigation]);
-
-  
-  
    const getPost = async() => {
-     const response = await axios.get( `${host}/posts/post/${route.params.post._id}`);
-     console.log("here man post details",response.data.data);
+     const response = await axios.get( `${host}/posts/post/${route.params.postid}`);
+     console.log("here man",response.data.data);
      setCurrentPost(response.data.data);
    }
 
@@ -54,9 +45,11 @@ export default function PostDetailsScreen({navigation,route}) {
 
         </View>
          
+         {currentPost.userid?
          <View style={{marginTop:15}}>
-        <MyPost navigation={navigation} data={post} showLike={true}/>
+        <MyPost navigation={navigation} data={currentPost}/>
         </View>
+        :null}
 
         
 
@@ -111,9 +104,7 @@ export default function PostDetailsScreen({navigation,route}) {
                   {currentPost.caption}
                 </Text>
 
-                 {/* {hashtags.map((hashtag) => 
-               <Text style={styles.capText} numberOfLines={1}>{`#${hashtag.name}`}</Text>
-            )} */}
+              
  
                 {
                   currentPost.hashtags&&

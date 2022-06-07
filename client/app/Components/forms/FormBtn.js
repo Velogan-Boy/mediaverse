@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
         borderRadius:3,
         padding:10,
         borderColor:colors.danger,
-        backgroundColor:colors.danger,
+        backgroundColor:colors.primary,
         borderRadius:30
     },
     text : {

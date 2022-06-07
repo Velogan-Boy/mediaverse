@@ -26,6 +26,7 @@ import HomeNavigator from './HomeNavigator';
 import AccountNavigator from './AccountNavigator';
 import DiscussionNavigator from './DiscussionNavigator';
 import Chat from '../Screens/ChatDetailScreen';
+import TrendingNavigator from './TrendingNavigator';
 
 
 const AppNavigator = () => {
@@ -79,7 +80,7 @@ const AppNavigator = () => {
       
       <Tab.Screen 
       name="Trending"
-      component={TrendingScreen}
+      component={TrendingNavigator}
       options={{
           headerTitleAlign: 'center',
           tabBarActiveTintColor: colors.primary,

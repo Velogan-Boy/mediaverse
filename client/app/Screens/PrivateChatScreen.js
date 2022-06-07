@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity ,Image,StatusBar} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity ,Image,StatusBar,RefreshControl,Alert,ScrollView} from 'react-native';
 // import { Avatar } from 'react-native-elements';
 import { auth, db,db1} from '../Config/firebase';
 // import { signOut } from 'firebase/auth';
@@ -11,18 +11,35 @@ import {MaterialCommunityIcons} from '@expo/vector-icons';
 
 
 
+
 const PrivateChatScreen = ({ navigation,route }) => {
+
+    
 
     const receiverEmail = route.params.email;
     const senderEmail = auth.currentUser.email;
+    const [user,setUser] = useState({});
+    const uid = auth.currentUser.uid;
 
     const unique = [senderEmail,receiverEmail].sort().join('');
     console.log(unique);
 
     // console.log(senderEmail);
     // console.log(receiverEmail);
+
+    // console.log(user);
   
     const [messages, setMessages] = useState([]);
+    const getUser = async () => {
+        db.ref('users/' + uid).on('value', (snapshot) => {
+            setUser(snapshot.val());
+        }
+        )
+        // console.log(user);
+    }
+    useEffect(() => {
+        getUser();
+    },[])
 
  
     useLayoutEffect(() => {
@@ -53,6 +70,47 @@ const PrivateChatScreen = ({ navigation,route }) => {
         db1.collection(`${unique}`).add({ _id, createdAt,  text, user });
     }, []);
 
+    // const handleDelete = (message) => {
+    //     console.log(message)
+    //     message.user.name = user.username?
+     
+    //     Alert.alert(
+    //         "Alert ! ",
+    //         "Are you sure you want to remove this Message ?",
+    //         [
+    //           // The "Yes" button
+    //           {
+    //             text: "Yes",
+    //             onPress: () => {handleMsg(message)}
+    //           },
+    //           // The "No" button
+    //           // Does nothing but dismiss the dialog when tapped
+    //           {
+    //             text: "No",
+    //           },
+    //         ]
+    //       )
+    //       :null
+     
+    // }
+    // const handleMsg =  (msg) => {
+    //     console.log("here it is ",msg);
+     
+    //       //   db1.collection(`${unique}`).doc(message._id).delete();
+    //         //   db1.collection(`${unique}`).doc(id).delete()
+            
+    //         console.log(db1.collection(`${unique}`).onSnapshot(
+    //             (snapshot => (
+    //                 snapshot.docs.filter(doc => {
+    //                     doc.data()._id==msg._id
+    //                 })
+    //             ))
+    //         )
+    //         )
+          
+              
+    // }
+
 
     return (
         <View style={styles.container}>
@@ -64,18 +122,25 @@ const PrivateChatScreen = ({ navigation,route }) => {
 
   
     </View>
+
+  
+
         <GiftedChat
+        
             messages={messages}
             showAvatarForEveryMessage={true}
             onSend={messages => onSend(messages)}
             user={{
-                _id: auth?.currentUser?.email,
-                name: auth?.currentUser?.displayName,
-                // avatar: auth?.currentUser?.photoURL
-                avatar:'https://placeimg.com/140/140/any'
+                _id: user.email,
+                name: user.username,
+                avatar:user.profileUrl
             }}
+            // onLongPress={(context, message) => {
+            //     handleDelete(message);
+            //   }}
          
         />
+
         </View>
     );
 }

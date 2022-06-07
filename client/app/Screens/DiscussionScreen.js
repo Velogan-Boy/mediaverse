@@ -1,18 +1,71 @@
-import { View, Text,StyleSheet,StatusBar, Button,SafeAreaView,ScrollView,Image } from 'react-native'
-import React,{useState,useEffect} from 'react';
+import { View, Text,StyleSheet,StatusBar, Button,SafeAreaView,ScrollView,Image,RefreshControl ,TouchableWithoutFeedback,Dimensions, TouchableOpacity} from 'react-native'
+import React,{useState,useEffect,useRef,useCallback} from 'react';
 import colors from '../Config/colors';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
+import MyCard from '../Components/MyCard';
 
-import Corousel from '../Components/Corousel';
+import Carousel from 'react-native-snap-carousel';
 import { FormBtn } from '../Components/forms';
 import SearchBar from '../Components/SearchBar';
 import List from '../Components/List';
+import CustomButton from '../Components/CustomButton';
+import axios from 'axios';  
+import host from '../Config/ip';
+
+const {width,height} = Dimensions.get('window');
 
 export default function DiscussionScreen({navigation}) {
+
+  
 
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
   const [fakeData, setFakeData] = useState();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const ref = useRef(null);
+
+  const [trendingquestion,setTrendingquestion] = useState([]);
+  const [trendingTopic,setTrendingTopic] = useState([]);
+
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getTrendingQuestions();
+      getTrendingTopic();
+      // The screen is focused
+      // Call any action and update data
+
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
+
+
+  const renderItem = ( data ) => {
+    // console.log("here lies",data);
+    return(
+    <TouchableOpacity onPress={() => navigation.navigate("QuestionView",{"questid":data.item._id})}>
+  <MyCard
+        
+        imageurl={data.item.topic.cover}
+        title={data.item.question}
+        subtitle={data.item.description}
+        
+        />
+  </TouchableOpacity>
+    )
+  };
 
   
   const qns = [
@@ -23,43 +76,25 @@ export default function DiscussionScreen({navigation}) {
     { qn: 'foo5', des: 'bar5', key: 5 },
   ]
 
-  const forums = [
-    { dname: 'Foo1' },
-    { dname: 'Foo2' },
-    { dname: 'Foo3' },
-    { dname: 'Foo4' },
-    { dname: 'Foo5' },
-    { dname: 'Foo6' },
-    { dname: 'Foo7' },
-    { dname: 'Foo8' },
-    { dname: 'Foo9' },
-  ]
-  useEffect(() => {
-    setFakeData(qns);
-  }, []);
   
-  const exampleItems = [
-    {
-      title: 'What is react native?',
-      text: 'JACK SPARROW',
-    },
-    {
-      title: 'jack',
-      text: 'Text 2',
-    },
-    {
-      title: 'iron man',
-      text: 'Text 3',
-    },
-    {
-      title: 'Item 4',
-      text: 'Text 4',
-    },
-    {
-      title: 'Item 5',
-      text: 'Text 5',
-    },
-  ];
+ 
+
+  const handleSearch = (searchPhrase) => {
+    navigation.navigate("QuestionResults",{query:searchPhrase})
+  }
+
+  const getTrendingQuestions = async() => {
+    const response = await axios.get(`${host}/discussions/questions/trending`);
+    // console.log(response.data.data);
+    setTrendingquestion(response.data.data);
+  }
+  
+  const getTrendingTopic = async() => {
+    const response = await axios.get(`${host}/discussions/topic/trending`);
+    console.log("here are topics ",response.data.data);
+    setTrendingTopic(response.data.data);
+  }
+
   return (
     <View style={styles.container}>
        <View style={styles.header}>
@@ -69,7 +104,14 @@ export default function DiscussionScreen({navigation}) {
 
 </View>
 
-<ScrollView>
+<ScrollView 
+ refreshControl={
+  <RefreshControl
+    refreshing={refreshing}
+    onRefresh={onRefresh}
+  />
+}
+style={{backgroundColor:colors.white}}>
 
 <SafeAreaView style={styles.root}>
         {!clicked}
@@ -78,17 +120,23 @@ export default function DiscussionScreen({navigation}) {
           setSearchPhrase={setSearchPhrase}
           clicked={clicked}
           setClicked={setClicked}
-          onFinish={() => console.log(searchPhrase)}
-
+          placeholder="Search for Topics"
+          onFinish={() => handleSearch(searchPhrase)}
         />
+
         {/* {clicked && (
           <List
             searchPhrase={searchPhrase}
             data={fakeData}
             setClicked={setClicked}
+
           />
         )} */}
+
       </SafeAreaView>
+
+
+
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* <View>
           {
@@ -104,24 +152,58 @@ export default function DiscussionScreen({navigation}) {
         </View> */}
       </ScrollView>
 
-
-
+      
    
 
-    <View style={{margin:20,marginTop:20}}>
-      <Text style={{fontSize:30}}>Trending Question</Text>
-    </View>
+    <View style={{margin:20,marginTop:20,display:"flex",flexDirection:"row",marginBottom:-10}}>
 
-    <Corousel data={exampleItems}/>
+      
+      <View>
+      <Text style={{fontSize:30}}>Trending Question</Text>
+      </View>
+
+      <View style={{marginHorizontal:30,marginTop:5}}>
+      <CustomButton
+            size={28}
+            type="plus-circle"
+            style={{height:70,width:70}}
+            onPress={() => navigation.navigate("AddQuestion")}
+      />
+      </View>
+      
+    </View>
+{/* 
+    <Corousel data={exampleItems} navigation={navigation}/> */}
+
+    {/* corousel goes here */}
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
+        <Carousel
+         layout={'tinder'} layoutCardOffset={`9`}
+        // layout={'stack'} layoutCardOffset={`18`}
+        //   layout="default"
+          ref={ref}
+          data={trendingquestion}
+          sliderWidth={300}
+          itemWidth={300}
+          renderItem={renderItem}
+          onSnapToItem={(index) => setActiveIndex(index)}
+        />
+      </View>
+    </SafeAreaView>
+
+    
+
 
     <View style={{margin:20,marginTop:20}}>
       <Text style={{fontSize:30}}>Trending Categories</Text>
     </View>
 
-    <View style={{marginTop:-10}}>
-    <FormBtn onPress={()=> navigation.navigate('Forum')} title="Attck on Titan"/>
-    <FormBtn onPress={()=> navigation.navigate('Forum')} title="Forum"/>
-    <FormBtn onPress={()=> navigation.navigate('Forum')} title="Forum"/>
+    <View style={{margin:20,marginTop:-5}}>
+    
+    {trendingTopic.map(topic => 
+    <FormBtn onPress={()=> navigation.navigate('Forum',{"topic":topic})} title={topic.name}/>
+    )}
     </View>
 
     </ScrollView>
@@ -150,7 +232,7 @@ const styles = StyleSheet.create({
       textAlign:"center",
     },
     root: {
-      marginTop: 40,
+      marginTop: 15,
       justifyContent: "center",
       alignItems: "center",
     },

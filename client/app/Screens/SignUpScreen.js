@@ -1,6 +1,6 @@
 //default apis
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, Platform, StyleSheet,Alert, ScrollView} from 'react-native';
+import {View, Text, TouchableOpacity, Platform, StyleSheet,Alert, ScrollView,Image, Dimensions, TextInput} from 'react-native';
 
 //firebase apis
 import {auth,db} from '../Config/firebase';
@@ -19,11 +19,24 @@ import OfflineStatus from '../Components/OfflineStatus';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
+import axios from 'axios';
+import host from '../Config/ip';
+import * as ImagePicker from 'expo-image-picker';
+import { storage } from '../Config/firebase';
+import PasswordInput from '../Components/forms/PasswordInput';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import ActivityIndicator from '../Components/ActivityIndicator';
+
+const {width,height} = Dimensions.get("window");
 
 
 const SignUpScreen = ({navigation}) => {
+  console.log(host);
 
   const [location, setLocation] = useState(null);
+
+  const [image, setImage] = useState(null);
+  const [furl,setFurl] = useState(null);
 
 
   const [name,setName] = useState("");
@@ -32,6 +45,8 @@ const SignUpScreen = ({navigation}) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [token,setToken]=useState(null);
+
+  const [isLoading,setIsLoading] =useState(false);
 
   const saveToken = (token,userId) => {
     db.ref('tokens/'+ userId ).set({
@@ -81,6 +96,9 @@ const registerForPushNotificationsAsync = async (uid,email,name,username) => {
 }
 
   const addUserToDatabase = async (uid,email,name,username,token) => {
+    
+    
+    
     db.ref('users/'+ uid).set({
       email:email,
       name:name,
@@ -88,7 +106,21 @@ const registerForPushNotificationsAsync = async (uid,email,name,username) => {
       username:username,
       location:location,
       token:token,
+      profileUrl:furl,
     })
+    
+    var fname = name.split(" ")[0];
+    var lname = name.split(" ")[1];
+
+    const response = await axios.post(`${host}/users/signup`,{
+      authid:uid,
+      username:username,
+      fname:fname,
+      lname:lname,
+      email:email,
+      profileImg:furl,
+    })
+    console.log(response);
   }
 
   
@@ -118,9 +150,46 @@ const registerForPushNotificationsAsync = async (uid,email,name,username) => {
     })();
   }, []);
 
+  
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    // console.log(result);
+
+    if (!result.cancelled) {
+      uploadImage(result.uri);
+      setImage(result.uri);
+    }
+  };
+
+  const uploadImage = async(uri) => {
+
+    setIsLoading(true);
+
+    const date = Date.now();
+
+    console.log('starting UPLOAD ========');
+    const blob = await fetch(uri).then((r) => r.blob());
+    const path = `/socialApp/${date}`;
+    await storage.ref(path).put(blob)
+
+    const setURL = await storage.ref(path).getDownloadURL()
+    console.log(`====> setURL is ${setURL} <=======`);
+    setFurl(setURL);
+
+    setIsLoading(false);
+
+  }
+
   const handleSignup = () => {
-    console.log(location);
-    if(email === ""|| password === ""|| confirmPassword === "" || name === "" || username === ""){
+    console.log("here is ",location);
+    if(email === ""|| password === ""|| confirmPassword === "" || name === "" || username === "" || furl===null){
         alert("Please fill all the fields");
     }else if(password !== confirmPassword){
       alert("Passwords do not match");
@@ -132,7 +201,6 @@ const registerForPushNotificationsAsync = async (uid,email,name,username) => {
           console.log("successfully registered with ",user.email);
           console.log("here is the id",user.uid);
           registerForPushNotificationsAsync(user.uid,user.email,name,username);
-         
           
         })
         .catch(error => Alert.alert(error.message));
@@ -146,9 +214,28 @@ const registerForPushNotificationsAsync = async (uid,email,name,username) => {
 
 
   return (
-    <View style={styles.container}>
+ 
+    <ScrollView style={styles.container}>
       <OfflineStatus/>
+      <ActivityIndicator visible={isLoading}/>
       <Text style={styles.text}>Sign Up</Text>
+
+      {image &&
+
+    <View style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
+    <Image source={{ uri: image }} style={styles.image} />
+    </View>
+
+    }
+
+    {image==null?
+    <View style={{marginBottom:10}}>
+    <FormBtn title="Choose Profile Image" onPress={pickImage}/>
+    </View>:
+    <View style={{marginBottom:10}}>
+    <FormBtn title="Change Profile Image" onPress={pickImage}/>
+    </View>
+    }
 
       <FormInput
         labelValue={name}
@@ -174,13 +261,13 @@ const registerForPushNotificationsAsync = async (uid,email,name,username) => {
         labelValue={email}
         onChangeText={(userEmail) => setEmail(userEmail)}
         placeholderText="Email"
-        iconType="user"
+        iconType="mail"
         keyboardType="email-address"
         autoCapitalize="none"
         autoCorrect={false}
       />
 
-      <FormInput
+      <PasswordInput
         labelValue={password}
         onChangeText={(userPassword) => setPassword(userPassword)}
         placeholderText="Password"
@@ -188,14 +275,14 @@ const registerForPushNotificationsAsync = async (uid,email,name,username) => {
         secureTextEntry={true}
       />
 
-      <FormInput
+      <PasswordInput
         labelValue={confirmPassword}
         onChangeText={(userPassword) => setConfirmPassword(userPassword)}
         placeholderText="Confirm Password"
         iconType="lock"
         secureTextEntry={true}
       />
-
+      
       <FormBtn
         title="Sign Up"
         onPress={handleSignup}
@@ -244,7 +331,9 @@ const registerForPushNotificationsAsync = async (uid,email,name,username) => {
         onPress={() => navigation.navigate('Login')}>
         <Text style={styles.nav1}>Already have an account? <Text style={styles.navButtonText}>Sign In</Text></Text>
       </TouchableOpacity>
-    </View>
+      
+    </ScrollView>
+  
   );
 };
 
@@ -252,20 +341,20 @@ export default SignUpScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: 20,
     backgroundColor:colors.dark,
-    height:"100%"
+    
   },
   text: {
     fontSize: 35,
     marginBottom: 10,
+    marginTop:20,
     color: colors.white,
+    textAlign:"center"
   },
   navButton: {
     marginTop: 15,
+    paddingBottom:50
   },
   navButtonText: {
     fontSize: 18,
@@ -286,6 +375,54 @@ const styles = StyleSheet.create({
   nav1:{
     fontSize: 18,
     fontWeight: '500',
-    color:"gray"
-  }
+    color:"gray",
+    textAlign:"center"
+  },
+  image:{
+    width:100,
+    height:100,
+    margin:20,
+    borderRadius:50,  
+  },
+  inputContainer: {
+    marginTop: 5,
+    marginBottom: 10,
+    width: '100%',
+    height: height / 15,
+    borderColor: colors.danger,
+    borderWidth:5,
+    borderRadius: 3,
+    borderWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    borderRadius:30
+  },
+  iconStyle: {
+    padding: 10,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRightColor: '#ccc',
+    width: 50,
+  },
+  input: {
+    padding: 10,
+    flex: 1,
+    fontSize: 16,
+    color: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignItems: 'stretch'
+  },
+  inputField: {
+    padding: 10,
+    marginTop: 5,
+    marginBottom: 10,
+    width: width / 1.5,
+    height: height / 15,
+    fontSize: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
 });

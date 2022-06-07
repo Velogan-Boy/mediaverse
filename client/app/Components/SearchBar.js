@@ -4,7 +4,7 @@ import { StyleSheet, TextInput, View, Keyboard, Button, Text } from "react-nativ
 import { Feather, Entypo } from "@expo/vector-icons";
 import colors from "../Config/colors"
 
-const SearchBar = ({ clicked, searchPhrase, setSearchPhrase, setClicked,onFinish }) => {
+const SearchBar = ({ clicked, searchPhrase, setSearchPhrase, setClicked,placeholder,onFinish }) => {
   return (
     <View style={styles.container}>
       <View
@@ -24,7 +24,7 @@ const SearchBar = ({ clicked, searchPhrase, setSearchPhrase, setClicked,onFinish
         {/* Input field */}
         <TextInput
           style={styles.input}
-          placeholder="Search"
+          placeholder={placeholder}
           value={searchPhrase}
           onChangeText={setSearchPhrase}
           onFocus={() => {

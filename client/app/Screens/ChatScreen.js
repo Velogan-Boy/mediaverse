@@ -1,14 +1,16 @@
-import { View, Text,StyleSheet,SafeAreaView,StatusBar,Image,Dimensions, TouchableOpacity } from 'react-native';
-import React,{useState,useEffect} from 'react';
+import { View, Text,StyleSheet,SafeAreaView,StatusBar,Image,Dimensions,RefreshControl, TouchableOpacity, ScrollView } from 'react-native';
+import React,{useState,useEffect,useCallback} from 'react';
 import colors from '../Config/colors';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import {db,auth} from '../Config/firebase';
+import axios from 'axios';
 
 const {height,width} = Dimensions.get("window");
 
 export default function ChatScreen({navigation}) {
 
   const [users,setUsers] =useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   const currUser = auth.currentUser.uid;
   console.log(currUser);
 
@@ -18,6 +20,7 @@ export default function ChatScreen({navigation}) {
   time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 
   useEffect(() => {
+    
     getUsers();
   },[])
   const truncate = (input) =>
@@ -33,6 +36,15 @@ export default function ChatScreen({navigation}) {
       console.log(users);
     })
   }
+
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
   
 
   return (
@@ -47,6 +59,15 @@ export default function ChatScreen({navigation}) {
     
 
     {/* base view */}
+    <ScrollView 
+     refreshControl={
+      <RefreshControl
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+      />
+    }
+    >
+
 
   
              <TouchableOpacity style={styles.chatView} onPress={() => navigation.navigate("ChatDetail")}>
@@ -73,14 +94,12 @@ export default function ChatScreen({navigation}) {
 <TouchableOpacity style={styles.chatView} onPress={() => navigation.navigate("PrivateChat",user)}>
       
 <View style={styles.grp}>
-<Image source={{uri:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV28HGLYA_r7YHEAt4uvCECjqUVIJFU3mgVA&usqp=CAU"}} style={styles.avatarImg}/>
+<Image source={{uri:user.profileUrl}} style={styles.avatarImg}/>
 <View style={styles.info}>
   <Text style={styles.username}>{user.name}</Text>
   <Text  numberOfLines={1} style={styles.lastMsg}>{truncate(`${user.email}`)}</Text>
 </View>
 </View>
-
-
 
 <View style={styles.date}>
   <Text>{time}</Text>
@@ -89,20 +108,10 @@ export default function ChatScreen({navigation}) {
 </TouchableOpacity>
 
              )}
-
-
-          
-                           
-         
-
-          
-
-
-    
-
-
    
-     
+                    
+         
+</ScrollView>
 
 
     

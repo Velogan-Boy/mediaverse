@@ -1,24 +1,37 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, ImageBackground, TextInput,StatusBar } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, ImageBackground, TextInput,StatusBar,Dimensions } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import colors from '../Config/colors';
 import * as ImagePicker from 'expo-image-picker';
-import { storage } from '../Config/firebase';
+import { auth,db, storage } from '../Config/firebase';
+import { FormBtn } from '../Components/forms';
+import ActivityIndicator from '../Components/ActivityIndicator';
+import axios from 'axios';
+import host from '../Config/ip';
+import LottieView from 'lottie-react-native';
 
 
-const EditProfileScreen = () => {
+const {width,height} = Dimensions.get("window");
+
+const EditProfileScreen = ({navigation}) => {
 
   const [image,setImage] = useState(null);
   const [furl,setFurl] = useState(null);
 
-  const [username,setUsername] = useState("");
-  const [email,setEmail] = useState("");
-  const [filename,setFname]=useState("");
-  const [lname,setLname]=useState("");
+  // console.log(auth.currentUser.uid);
+
+  const [name,setName] = useState(null);
+
+  const [isdone, setIsdone] = useState(false);
+
+
+  const [isLoading,setIsLoading] = useState(false);
 
   const uploadImage = async(uri) => {
+
+    setIsLoading(true);
 
     const date = Date.now();
 
@@ -30,6 +43,8 @@ const EditProfileScreen = () => {
     const setURL = await storage.ref(path).getDownloadURL()
     console.log(`====> setURL is ${setURL} <=======`);
     setFurl(setURL);
+
+    setIsLoading(false);
 
   }
   
@@ -49,6 +64,90 @@ const EditProfileScreen = () => {
       setImage(result.uri);
     }
   };
+
+  const handleSubmit = () => {
+
+    console.log(`====> handleSubmit <=======`);
+    if(name==null && furl==null){
+      alert("Please Fill Atleast One Field");
+      return;
+    }
+
+    else{
+
+      updateProfile(name,furl);
+      console.log("hey")
+
+      if(name!=null && furl!=null){
+        db.ref('users/'+auth.currentUser.uid).update({
+          name:name,
+          profileUrl:furl
+        })
+      }
+  
+      if(name!=null && furl==null){
+        db.ref('users/'+auth.currentUser.uid).update({
+          name:name
+        })
+        
+      }
+  
+      if(name==null && furl!=null){
+        db.ref('users/'+auth.currentUser.uid).update({
+          profileUrl:furl
+        })
+      
+      }
+
+      
+
+     
+
+    }
+   
+    
+
+  
+    
+
+  }
+
+  const updateProfile = async(name,furl) => {
+
+    const fname = name.split(" ")[0];
+    const lname = name.split(" ")[1];
+
+    const obj = {};
+    
+    obj.fname = fname;
+    obj.lname = lname;
+    if(furl!=null){
+      obj.profileImg = furl;
+    }
+    
+
+
+
+    const response = await axios.patch(`${host}/users`,obj,{
+      headers:{
+        Authorization:auth.currentUser.uid,
+      }
+    });
+
+    console.log(response);
+
+    if(response.data.status=="success"){
+      console.log("success");
+
+      setIsdone(true);
+      setTimeout(() =>  navigation.goBack(), 2500);
+       
+       // navigation.navigate("Home");
+
+     }
+
+
+  }
   
 
   return (
@@ -57,6 +156,15 @@ const EditProfileScreen = () => {
       style={styles.container}
       behavior="padding"
     >
+       <ActivityIndicator visible={isLoading}/>
+       {isdone? 
+      <LottieView
+             autoPlay
+             loop={false}             
+             source={require("../animation/done.json")}
+             style={{backgroundColor:colors.white,zIndex:2}}
+      />:null
+      }
 
 <View style={styles.header1}>
 
@@ -78,7 +186,7 @@ const EditProfileScreen = () => {
             }}>
               <ImageBackground
                 source={{
-                  uri: image?image:'https://picsum.photos/200/300',
+                  uri: image?image:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFEk3Qnvjxn_02_f5EOcMoeciUhpVCKaSLPj08JaykNaeJXcqnlvm5ukDiTP--lov2C60&usqp=CAU',
                 }}
                 style={{ height: 100, width: 100 }}
                 imageStyle={{ borderRadius: 15 }}
@@ -94,62 +202,31 @@ const EditProfileScreen = () => {
                   />
                 </View>
               </ImageBackground>
+              
             </View>
           </TouchableOpacity>
-          <Text style={{ marginTop: 10, marginBottom: 30, fontSize: 18, fontWeight: 'bold' }}>Praneeth</Text>
+          <Text style={{ marginTop: 10, marginBottom: 30, fontSize: 18, fontWeight: 'bold' }}>Username</Text>
         </View>
 
         <View style={styles.action}>
           <FontAwesome style={{ padding: 10 }} name="user-o" size={15} />
           <TextInput
             style={styles.textInput}
-            placeholder="First Name"
+            placeholder="Name"
             placeholderTextColor="#666666"
+            onChangeText={(text) => setName(text)}
           >
           </TextInput>
 
         </View>
 
 
-        <View style={styles.action}>
-          <FontAwesome style={{ padding: 10 }} name="user-o" size={15} />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Last Name"
-            placeholderTextColor="#666666"
-          >
-          </TextInput>
+        <FormBtn
+          title="Save Changes"
+          onPress={handleSubmit}
+        />
 
-        </View>
-
-
-        <View style={styles.action}>
-          <FontAwesome style={{ padding: 10 }} name="envelope-o" size={15} />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Email"
-            keyboardType="email-address"
-            placeholderTextColor="#666666"
-          >
-          </TextInput>
-
-        </View>
-
-
-        <View style={styles.action}>
-          <FontAwesome style={{ padding: 10 }} name="globe" size={15} />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Location"
-            placeholderTextColor="#666666"
-          >
-          </TextInput>
-        </View>
-
-
-        <TouchableOpacity style={styles.commandButton} onPress={() => { }}>
-          <Text style={styles.panelButtonTitle}>Submit</Text>
-        </TouchableOpacity>
+      
       </View>
     </KeyboardAwareScrollView>
   )
@@ -163,6 +240,7 @@ const styles = StyleSheet.create({
     
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     flex:1,
+    height:height
   
   },
   header1 : {

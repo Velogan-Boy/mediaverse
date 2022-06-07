@@ -18,6 +18,7 @@ import {auth} from '../Config/firebase';
 
 import signInWithGoogleAsync from '../Auth/GoogleAuth';
 import OfflineStatus from '../Components/OfflineStatus';
+import PasswordInput from '../Components/forms/PasswordInput';
 
 const {width, height} = Dimensions.get('window');
 
@@ -69,7 +70,7 @@ const LoginScreen = ({navigation}) => {
         autoCorrect={false}
       />
 
-      <FormInput
+      <PasswordInput
         labelValue={password}
         onChangeText={(userPassword) => setPassword(userPassword)}
         placeholderText="Password"

@@ -11,7 +11,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 //color palette
 import colors from '../../Config/colors';
 
-const FormInput = ({labelValue, placeholderText, iconType,secureTextEntry, ...rest}) => {
+const PasswordInput = ({labelValue, placeholderText, iconType, ...rest}) => {
   return (
     <View style={styles.inputContainer}>
       <View style={styles.iconStyle}>
@@ -20,7 +20,6 @@ const FormInput = ({labelValue, placeholderText, iconType,secureTextEntry, ...re
 
       <TextInput
         value={labelValue}
-        multiline={true}
         style={styles.input}
         numberOfLines={1}
         placeholder={placeholderText}
@@ -34,7 +33,7 @@ const FormInput = ({labelValue, placeholderText, iconType,secureTextEntry, ...re
   );
 };
 
-export default FormInput;
+export default PasswordInput;
 
 const styles = StyleSheet.create({
   inputContainer: {

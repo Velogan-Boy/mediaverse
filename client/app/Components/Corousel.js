@@ -7,10 +7,12 @@ import colors from '../Config/colors';
 
 const {width,height} = Dimensions.get("window");
 
-const CustomCarousel = (data) => {
+const CustomCarousel = ({data,navigation}) => {
     
 
    const exampleItems=data.data;
+   console.log(exampleItems);
+  
 //    console.log(exampleItems);
     
 
@@ -19,7 +21,7 @@ const CustomCarousel = (data) => {
   const ref = useRef(null);
 
   const renderItem = useCallback(({ item, index }) => (
-      <TouchableWithoutFeedback onPress={() => console.log(item.title)}>
+      <TouchableWithoutFeedback onPress={() => navigation.navigate("QuestionView",{"data":exampleItems})}>
     <View
     // onPress={() => console.log(item)}
       style={{

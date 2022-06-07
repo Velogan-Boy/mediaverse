@@ -1,16 +1,22 @@
-import { View, Text,StyleSheet,StatusBar, Dimensions,Platform,Image,Alert } from 'react-native'
+import { View, Text,StyleSheet,StatusBar, Dimensions,Platform,Image,Alert, ScrollView } from 'react-native'
 import React, { useState } from 'react';
 import colors from '../Config/colors';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as ImagePicker from 'expo-image-picker';
 import { storage } from '../Config/firebase';
+import { auth } from '../Config/firebase';
 
 import { FormBtn,FormInput } from '../Components/forms';
+import host from '../Config/ip';
+import axios from 'axios';
+import ActivityIndicator from '../Components/ActivityIndicator';
+import LottieView from 'lottie-react-native';
+
 
 const {width,height} = Dimensions.get("window");
 
-export default function AddPostScreen() {
+export default function AddPostScreen({navigation}) {
 
     const [image, setImage] = useState(null);
 
@@ -18,8 +24,15 @@ export default function AddPostScreen() {
 
     const [caption,setCaption] = useState(null);
     const [hashtag,setHashtag] = useState(null);
+    const [location,setLocation] = useState(null);
+
+    const [isLoading,setIsLoading] = useState(false);
+
+    const [isdone, setIsdone] = useState(false);
 
     const uploadImage = async(uri) => {
+
+        setIsLoading(true);
 
         const date = Date.now();
     
@@ -31,6 +44,8 @@ export default function AddPostScreen() {
         const setURL = await storage.ref(path).getDownloadURL()
         console.log(`====> setURL is ${setURL} <=======`);
         setFurl(setURL);
+
+        setIsLoading(false);
 
       }
 
@@ -53,43 +68,106 @@ export default function AddPostScreen() {
         }
       };
 
-      const check = () => {
+      const check = async () => {
+        
+        if(caption === null && hashtag === null && furl === null){
+            Alert.alert('Please fill atleast one field');
+            return;
+        }
+        
         console.log(caption);
         console.log(hashtag);
         console.log(furl);
-        const likes =0;
-        const comment=0;
+        console.log(location);
+        
+        let hashtagArray = hashtag.split(' ');
+        // console.log(hashtags);
+        let hashtags = new Array();
 
-        if(furl!=null){
-            console.log("ready");
-        }
-        if(furl==null && caption == null && hashtag==null){
-          Alert.alert("Atleast One Field Should be filled");
+
+        
+        for(let hashtag of hashtagArray){
+          if(hashtag.charAt(0) !== '#'){
+            // console.log('hashtag is not valid');
+                 hashtag = '#' + hashtag;
+                }
+                hashtags.push(hashtag);
+              }
+          console.log(hashtags);
+        
+          let type;
+
+        // if(furl!=null){
+        //     console.log("ready");
+        // }
+
+        type = furl!=null ? 'image' : 'text';
+
+        const authid = auth.currentUser.uid;
+
+
+
+        const response = await axios.post(`${host}/posts`,{
+          type:type,
+          caption:caption,
+          hashtags:hashtags,
+          location:location,
+          imageURL:furl,
+        },{
+          headers:{
+            Authorization:authid,
+          }
+        })
+        console.log(response.data.status);
+        if(response.data.status=="success"){
+         console.log("success");
+
+         setIsdone(true);
+         setTimeout(() =>  navigation.navigate("Home"), 2500)
+          
+          // navigation.navigate("Home");
+
         }
         else{
-          Alert.alert("ready to fire into database !",caption);
+          Alert.alert("failed");
         }
      
       }
-      const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
+
+      const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
+      
 
   return (
     <KeyboardAwareScrollView
       style={styles.container}
       behavior="padding"
     >
+       <ActivityIndicator visible={isLoading}/>
+       {isdone? 
+      <LottieView
+             autoPlay
+             loop={false}             
+             source={require("../animation/done.json")}
+             style={{backgroundColor:colors.white,zIndex:2}}
+      />:null
+      }
+
         <View style={styles.header}>
 
-<MaterialCommunityIcons name="post" size={38} color={colors.light} style={{margin:8}}/>
-<Text style={styles.headerContent}>Add Posts</Text>
+        <MaterialCommunityIcons name="post" size={38} color={colors.light} style={{margin:8}}/>
+        <Text style={styles.headerContent}>Add Posts</Text>
 
 
-</View>
+        </View>
+        
+    <ScrollView>
 
     <View style={{margin:20}}>
 
     {image && 
+    <View style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
     <Image source={{ uri: image }} style={styles.image} />
+    </View>
     }
 
     {image==null?
@@ -119,11 +197,21 @@ export default function AddPostScreen() {
         iconType="slack"
         
       />
+
+      <FormInput
+        // labelValue={""}
+        onChangeText={(e) => setLocation(e)}
+        placeholderText="Location"
+        iconType="find"
+        
+      />
       </View>
       
-      <View style={{margin:30}}>
+      <View style={{margin:30,marginBottom:60}}>
       <FormBtn title="Post" onPress={check}/>
       </View>
+
+      </ScrollView>
 
     </KeyboardAwareScrollView>
   )
@@ -148,6 +236,7 @@ const styles = StyleSheet.create({
       image:{
           width:width/2,
           height:height/3.5,
-          margin:20
+          margin:20,
+          borderRadius:15
       }
 })

@@ -1,12 +1,16 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet,TouchableWithoutFeedback } from 'react-native';
+import moment from 'moment';
 
-export default function Question() {
+
+export default function Question({ onPress,title,description,time }) {
+  const dateTimeAgo = moment(time).fromNow();
   return (
+    <TouchableWithoutFeedback onPress={onPress}>
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.qntitle}>Question title goes here</Text>
+        <Text style={styles.qntitle}>{title}</Text>
         <View style={styles.headerRight}>
-          <Text style={[styles.dateText, { color: 'black' }]}>5 hours ago</Text>
+          <Text style={[styles.dateText, { color: 'black' }]}>{dateTimeAgo}</Text>
         </View>
       </View>
       <View
@@ -15,15 +19,15 @@ export default function Question() {
           borderBottomWidth: 1,
         }}
       />
-      <Text style={styles.qndes}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis, rerum? Ipsum eaque magni dolores sed adipisci, error, nihil repellat eligendi dignissimos id vero, quis sint laudantium architecto rerum nisi laborum ducimus illum quae voluptate expedita ullam porro libero? Odit quasi tenetur rem fugit atque nihil facere et pariatur vero officia.</Text>
+      <Text style={styles.qndes}>{description}</Text>
     </View>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
     marginBottom: 8,
     marginLeft: 4,
     marginRight: 4,

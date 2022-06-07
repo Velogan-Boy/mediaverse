@@ -13,6 +13,11 @@ import PrivateChatScreen from '../Screens/PrivateChatScreen';
 import MapScreen from '../Screens/MapScreen';
 import AddPostScreen from '../Screens/AddPostScreen';
 import CommentsScreen from '../Screens/CommentsScreen';
+import AccountSearchResultsScreen from '../Screens/AccountSearchResultsScreen';
+import OtherAccountScreen from '../Screens/OtherAccountScreen';
+import FollowersScreen from '../Screens/FollowersScreen';
+import FollowingScreen from '../Screens/FollowingScreen';
+import TrendingPostDetails from '../Screens/TrendingPostDetails';
 
 
 
@@ -31,7 +36,12 @@ const HomeNavigator = () => {
       <Stack.Screen name="ChatDetail" component={ChatDetailScreen} />
       <Stack.Screen name="PrivateChat" component={PrivateChatScreen}/>
       <Stack.Screen name="Map" component={MapScreen} />
-
+      <Stack.Screen name="AccountSearchResults" component={AccountSearchResultsScreen} />
+      <Stack.Screen name="OtherAccount" component={OtherAccountScreen} />
+      <Stack.Screen name="Followers" component={FollowersScreen} />
+      <Stack.Screen name="Following" component={FollowingScreen} />
+      <Stack.Screen name="TrendingPostDetails" component={TrendingPostDetails} />
+      
 
     </Stack.Navigator>
   );

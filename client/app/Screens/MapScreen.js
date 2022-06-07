@@ -59,6 +59,7 @@ export default function MapScreen() {
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
+      
     })();
   }, []);
 
@@ -98,7 +99,12 @@ export default function MapScreen() {
        {/* other users */}
 
       {users.map((user) => 
-      <Marker coordinate={{ latitude: user.location.coords.latitude, longitude: user.location.coords.longitude }} 
+      <Marker coordinate={{ 
+
+         latitude: user.location.coords.latitude!=null?user.location.coords.latitude:0,
+         longitude: user.location.coords.longitude!=null?user.location.coords.longitude:0,
+
+         }} 
       pinColor="green"
       >
       <Callout>
