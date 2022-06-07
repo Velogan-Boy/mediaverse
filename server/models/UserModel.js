@@ -11,7 +11,6 @@ const userSchema = mongoose.Schema(
       longitude: Number,
       profileImg: {
          type: String,
-         default: 'https://firebasestorage.googleapis.com/v0/b/socialapp-5e56c.appspot.com/o/avatar.png?alt=media&token=37bb52ed-61ed-4e00-88de-e9a5eb6ae2bb',
       },
       upvotedPosts: [{ type: mongoose.Types.ObjectId, ref: 'Posts' }],
       following: [{ type: mongoose.Types.ObjectId, ref: 'Users' }],
@@ -21,6 +20,21 @@ const userSchema = mongoose.Schema(
       timestamps: true,
    }
 );
+
+userSchema.pre('save', function (next) {
+   if (!this.profileImg) {
+      this.profileImg = `https://ui-avatars.com/api/?name=${this.fname}+${this.lname}&length=2&rounded=true&bold=true&size=128&background=random`;
+   }
+   next();
+});
+
+//deselect authid whenever we get the user details
+
+userSchema.pre('get', function (next) {
+   this.select('-__v');
+   this.select('-authid');
+   next();
+});
 
 const UserModel = mongoose.model('Users', userSchema);
 

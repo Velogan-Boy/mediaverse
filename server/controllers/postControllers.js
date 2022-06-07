@@ -14,6 +14,25 @@ export const getAllPostsOfAnUser = catchAsync(async (req, res) => {
    });
 });
 
+export const getAllPostsOfAnUserByUserId = catchAsync(async (req, res) => {
+   const user = await UserModel.findById(req.params.userid);
+
+   if (!user) {
+      return res.status(404).json({
+         status: 'fail',
+         message: 'User not found',
+      });
+   }
+
+   const posts = await PostModel.find({ userid: user._id });
+
+   return res.status(200).json({
+      status: 'success',
+      results: posts.length,
+      data: posts,
+   });
+});
+
 export const getUserFeed = catchAsync(async (req, res) => {
    const user = req.user;
 
@@ -21,7 +40,7 @@ export const getUserFeed = catchAsync(async (req, res) => {
       .sort('-createdAt')
       .populate({
          path: 'userid',
-         select: 'username profileImg',
+         select: ['username', 'profileImg'],
       })
       .limit(15);
 
@@ -51,7 +70,7 @@ export const getUserFeed = catchAsync(async (req, res) => {
 });
 
 export const getPostByPostId = catchAsync(async (req, res) => {
-   const post = await PostModel.findById(req.params.postid).populate('hashtags comments');
+   const post = await PostModel.findById(req.params.postid).populate('userid hashtags comments');
 
    return res.status(200).json({
       status: 'success',
@@ -67,7 +86,8 @@ export const getTrendingPosts = catchAsync(async (req, res) => {
    for (const item of trendingHashtags) {
       const trendingPost = await PostModel.find({ hashtags: { $in: item._id } })
          .sort('-upvotes')
-         .limit(3);
+         .populate('userid')
+         .limit(1);
 
       posts.push({ hashtag: item, post: trendingPost });
    }

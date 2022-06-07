@@ -1,0 +1,50 @@
+
+USERS RELATED ROUTES:
+	*Get user details with authid - GET /users/signin
+	Get user detais with userid - GET /users/user/:userid
+	*Create new user - POST /users/signup
+	*Edit users details - PATCH  /users/
+	*Delete user - DELETE /users
+	Search for an user ( with username ) - GET /users/search?searchString='something'
+	Get all users - GET /users
+	*Follow / Unfollow an user - GET /users/follow/:followingid
+	*Remove follower - DELETE users/follower/:followerUserId
+	*Get all followers of an user -  GET /users/followers/
+	*Get all followings of an user - GET /users/following/
+	
+
+POST RELATED ROUTES:
+	*Get all posts of an user - GET /posts/
+	Get all posts of an user - GET /posts/user/:userid
+	*Get users feed - GET /posts/feed
+	Get post by Postid - GET /posts/post/:postid
+	Get trending posts (based on trending Hashtags) - GET /posts/trending
+	*Create new post - POST /posts/
+	*Update post by Postid - PATCH /posts/post/:postid
+	*Upvote post - PATCH /posts/upvote/:postid
+	*Delete post - DELETE /posts/post/:postid
+
+COMMENT RELATED ROUTES:
+	Get comments of a post - GET /comments/:postid
+	*Create comment on post - POST /comments/post/:postid
+	*Create a reply on comment - POST /comments/:commentid
+	*Delete a comment - DELETE /comments/:postid/:commentid
+	
+DISCUSSION RELATED ROUTES:
+	Get all the Questions based on a Topic - GET /discussions/questions/topic/:topicid
+	Get question by QuestionId - GET /discussions/questions/:questionid
+	Get trending questions - GET /discussions/questions/trending
+	Get trending topics - GET /discussions/topic/trending
+	Search for a topic - GET /discussions/topic/search?keyword='something'
+	*Post a new question - POST /discussions/questions
+	*Post a new answer - POST /discussions/questions/answer/:questionid
+		
+	
+	
+	
+	
+	
+	
+* - indicates private routes => Authorization header should have AuthId from firebase	
+	
+		

@@ -2,6 +2,7 @@ import express from 'express';
 
 import {
    getAllPostsOfAnUser,
+   getAllPostsOfAnUserByUserId,
    getUserFeed,
    getPostByPostId,
    getTrendingPosts,
@@ -16,6 +17,7 @@ const router = express.Router();
 
 router
    .get('/', checkAuth, getAllPostsOfAnUser)
+   .get('/user/:userid', getAllPostsOfAnUserByUserId)
    .get('/feed', checkAuth, getUserFeed)
    .get('/post/:postid', getPostByPostId)
    .get('/trending', getTrendingPosts)
