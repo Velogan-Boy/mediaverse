@@ -9,9 +9,7 @@ const userSchema = mongoose.Schema(
       email: String,
       latitude: Number,
       longitude: Number,
-      profileImg: {
-         type: String,
-      },
+      profileImg: String,
       upvotedPosts: [{ type: mongoose.Types.ObjectId, ref: 'Posts' }],
       following: [{ type: mongoose.Types.ObjectId, ref: 'Users' }],
       followers: [{ type: mongoose.Types.ObjectId, ref: 'Users' }],

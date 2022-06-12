@@ -1,4 +1,3 @@
-const checkAuth = require('../helpers/checkAuth');
 const { CommentModel, PostModel, UserModel } = require('../models');
 const catchAsync = require('../utils/catchAsync');
 

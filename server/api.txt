@@ -1,4 +1,3 @@
-
 USERS RELATED ROUTES:
 	*Get user details with authid - GET /users/signin
 	Get user detais with userid - GET /users/user/:userid
@@ -38,12 +37,7 @@ DISCUSSION RELATED ROUTES:
 	Search for a topic - GET /discussions/topic/search?keyword='something'
 	*Post a new question - POST /discussions/questions
 	*Post a new answer - POST /discussions/questions/answer/:questionid
-		
-		
-
-	
-	
-	
+			
 * - indicates private routes => Authorization header should have AuthId from firebase	
 	
 		
