@@ -1,3 +1,3 @@
 
-const host = "https://mediaverse-backend.herokuapp.com";
+const host = "https://mediaverse-api.onrender.com";
 export default host;
