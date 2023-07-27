@@ -26,6 +26,7 @@ const PasswordInput = ({labelValue, placeholderText, iconType, ...rest}) => {
         placeholderTextColor="white"
         secureTextEntry={true}
         {...rest}
+        type="password"
         
       />
       

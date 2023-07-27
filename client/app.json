@@ -32,11 +32,20 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.logeshsiva.mediaverse"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "A social media app"
+    "description": "A social media app",
+    "extra": {
+      "eas": {
+        "projectId": "73411bdd-9663-46e3-92fe-43a7a5f87676"
+      }
+    }
   }
 }

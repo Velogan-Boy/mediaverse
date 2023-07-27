@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     height: "100%",
     opacity: 0.8,
-    marginTop:Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    // marginTop:Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     width: "100%",
     zIndex: 1,
   },

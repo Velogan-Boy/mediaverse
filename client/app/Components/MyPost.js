@@ -69,22 +69,22 @@ const MyPost = ({navigation,data,route,showLike}) => {
       }
     }, [isLiked]);
 
-    useEffect(() => {
-      const unsubscribe = navigation.addListener('focus', () => {
-        // The screen is focused
-        // Call any action and update data
-        getPost();
-      });
+    // useEffect(() => {
+    //   const unsubscribe = navigation.addListener('focus', () => {
+    //     // The screen is focused
+    //     // Call any action and update data
+    //     getPost();
+    //   });
   
-      // Return the function to unsubscribe from the event so it gets removed on unmount
-      return unsubscribe;
-    }, [navigation]);
+    //   // Return the function to unsubscribe from the event so it gets removed on unmount
+    //   return unsubscribe;
+    // }, [navigation]);
 
-    const getPost = async() => {
-      const response = await axios.get( `${host}/posts/post/${data._id}`);
-      console.log("here man see",response.data.data);
-      setCurrentPost(response.data.data);
-    }
+    // const getPost = async() => {
+    //   const response = await axios.get( `${host}/posts/post/${data._id}`);
+    //   console.log("here man see",response.data.data);
+    //   setCurrentPost(response.data.data);
+    // }
 
   
     const handleLike = async () => {
@@ -99,8 +99,6 @@ const MyPost = ({navigation,data,route,showLike}) => {
         setUpvote(response.data.data.upvotes);
         // console.log(response.data.data.upvotes);
         setLiked((isLiked) => !isLiked);
-
-
      
     }
 
@@ -229,10 +227,10 @@ const MyPost = ({navigation,data,route,showLike}) => {
                 
                 />
 
-                {showLike && 
+                {/* {showLike && 
 
       <Text style={{marginLeft:28,marginTop:-30,fontSize:16}}>{upvote}</Text>
-                }
+                } */}
                 
       </TouchableOpacity>
 
@@ -297,7 +295,8 @@ const MyPost = ({navigation,data,route,showLike}) => {
           icon:{
             height:50,
             width:50,
-            marginLeft:10
+            marginLeft:10,
+            marginTop:19
           },
           caption:{
             marginTop:-10,
@@ -316,7 +315,7 @@ const MyPost = ({navigation,data,route,showLike}) => {
             width: 85,
             height: 85,
             marginLeft: -5,
-            marginTop:-8,
+            // marginTop:-6,
           },
     
     

@@ -19,7 +19,7 @@ const AppBar = ({onPress1,onPress2}) => {
       </TouchableOpacity>
       <View style={styles.brand}>
          
-          {/* <Image source={require("../../assets/images/mediaverse-logo.png")} style={styles.logo}/> */}
+          <Image source={require("../../assets/images/mediaverse-logo-dark-horizontal.png")} style={styles.logo}/>
 
           
       </View>

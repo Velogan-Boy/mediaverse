@@ -101,7 +101,7 @@ export default function QuestionViewScreen({navigation,route}) {
 
       {/* base view */}
     <View style={{marginTop:15,margin:10}}>
-          <Text style={{fontSize:25}}>Answers</Text>
+          <Text style={{fontSize:25}}>People Thoughts</Text>
           <ScrollView horizontal={true}>
 
           { question.answers && question.answers.map((answer) => 

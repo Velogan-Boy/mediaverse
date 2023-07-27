@@ -28,9 +28,15 @@ export default function TrendingScreen({navigation}) {
 
 
   const getTrending = async() => {
+       try{
         const response = await axios.get(`${host}/posts/trending`);
-        console.log("here is trending",response.data.data);
+        console.log("trending",response.data.data);
         setTrending(response.data.data);
+       }
+        catch(err){
+          console.log(err);
+        }
+
   }
 
 

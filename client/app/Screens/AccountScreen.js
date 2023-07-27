@@ -63,11 +63,29 @@ export default function AccountScreen({ navigation }) {
   }
 
   const handleLogout = () => {
-    auth.signOut().then(() => {
-      setOut(true);
-      setTimeout(() =>  navigation.navigate("Login"), 2500)
-      // navigation.replace("Login");
-    }).catch(error => Alert.alert(error.message));
+    
+    Alert.alert(
+      "Alert ! ",
+      "Are you sure you want to Logout ?",
+      [
+        {
+          text: "Yes",
+          onPress: () => {
+            auth.signOut().then(() => {
+              setOut(true);
+              setTimeout(() =>  navigation.navigate("Login"), 500)
+              // navigation.replace("Login");
+            }).catch(error => Alert.alert(error.message));
+          },
+        }
+        ,
+        {
+          text: "No",
+        },
+      ]
+    )
+
+
   }
 
   const wait = (timeout) => {
@@ -118,14 +136,14 @@ export default function AccountScreen({ navigation }) {
   return (
     <ScrollView style={styles.container} >
 
-{out? 
+{/* {out &&
       <LottieView
              autoPlay
              loop={false}             
              source={require("../animation/logout.json")}
              style={{backgroundColor:colors.white,zIndex:2}}
-      />:null
-      }
+      />
+      } */}
 
      <View style={styles.header}>
 

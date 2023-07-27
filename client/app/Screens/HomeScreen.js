@@ -64,7 +64,7 @@ export default function HomeScreen({navigation,route}) {
         }
       });
     
-      console.log("here are data ",response.data.data);
+      // console.log("here are data ",response.data.data);
       setData(response.data.data);
       // console.log(response.data.data);
     } catch (error) {
@@ -92,7 +92,6 @@ export default function HomeScreen({navigation,route}) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-
       allPost();
     });
 

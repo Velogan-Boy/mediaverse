@@ -81,7 +81,7 @@ export default AnswerCard;
 
 const styles = StyleSheet.create({
     container:{
-       margin:5,width:screenWidth-50,backgroundColor:colors.primary,borderRadius:10,
+       margin:5,width:screenWidth-50,backgroundColor:colors.secondary,borderRadius:10,
        maxWidth:screenWidth-50,
     },
     grp1:{
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     },
     modalView: {
       margin: 10,
-      backgroundColor:colors.primary,
+      backgroundColor:colors.secondary,
       borderRadius: 20,
       padding: 35,
       alignItems: "center",
