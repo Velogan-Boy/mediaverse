@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "mediaverse",
-    "slug": "mediaverse",
+    "name": "MediaVerse",
+    "slug": "MediaVerse",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/mediaverse-logo-dark-small.png",
     "userInterfaceStyle": "light",
     "plugins": [
       [
@@ -41,11 +41,12 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "A social media app",
+    "description": "Welcome to Mediaverse, the non-addictive social media app that delivers all the services of a basic social networking platform, without the harmful doom scrolling. Embrace a world of integrated features, including a Discussion Forum akin to StackOverflow, an Interactive Map tracking users' locations like SnapMap, Global Chat for real-time conversations, and Trending Topics showcasing popular posts. With Mediaverse, there's no need to hop between apps; we've combined all your favorites into one seamless experience. Join us now to rediscover the joy of meaningful connections in a responsible and mindful social environment.",
     "extra": {
       "eas": {
         "projectId": "73411bdd-9663-46e3-92fe-43a7a5f87676"
       }
     }
+
   }
 }

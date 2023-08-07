@@ -35,9 +35,7 @@ export default function HomeScreen({navigation,route}) {
   const [refreshing, setRefreshing] = useState(false);
 
   const [data,setData] = useState([]);
-  const [fakeData,setFakeData] = useState([]);
 
-  const [searchResult,setSearchResult] =useState([]);
 
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -72,31 +70,27 @@ export default function HomeScreen({navigation,route}) {
     }
   };
 
-  const getLocation = async() => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      setErrorMsg('Permission to access location was denied');
-     
-    }else{
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-      console.log("here is ",location);
-      updatelocation(location);
-    }
-  }
+  useEffect(() => {
+    const getLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+      } else {
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+        console.log('here is ', location);
+        updatelocation(location);
+      }
+    };
 
-  useEffect( ()=>{
     getLocation();
 
-  },[]);
-
-  useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       allPost();
     });
 
-    return unsubscribe;
-  }, [navigation]);
+    return () => unsubscribe();
+  }, []);
 
   
   const [searchPhrase, setSearchPhrase] = useState("");

@@ -127,7 +127,7 @@ export default function AccountScreen({ navigation }) {
     });
 
     console.log("here is response",response.message);
-    setTimeout(() =>  getUser(), 2500)
+    setTimeout(() =>  getUser(), 500)
   }
 
 
