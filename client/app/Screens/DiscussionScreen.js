@@ -1,5 +1,6 @@
-import { View, Text,StyleSheet,StatusBar, Button,SafeAreaView,ScrollView,Image,RefreshControl ,TouchableWithoutFeedback,Dimensions, TouchableOpacity} from 'react-native'
+import { View, Text,StyleSheet,StatusBar, Button,ScrollView,Image,RefreshControl ,TouchableWithoutFeedback,Dimensions, TouchableOpacity} from 'react-native'
 import React,{useState,useEffect,useRef,useCallback} from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import colors from '../Config/colors';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import MyCard from '../Components/MyCard';
@@ -96,7 +97,7 @@ export default function DiscussionScreen({navigation}) {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
        <View style={styles.header}>
 
 <MaterialCommunityIcons name="chat" size={38} color={colors.white} style={{margin:8}}/>
@@ -113,7 +114,7 @@ export default function DiscussionScreen({navigation}) {
 }
 style={{backgroundColor:colors.white}}>
 
-<SafeAreaView style={styles.root}>
+<View style={styles.root}>
         {!clicked}
         <SearchBar
           searchPhrase={searchPhrase}
@@ -133,7 +134,7 @@ style={{backgroundColor:colors.white}}>
           />
         )} */}
 
-      </SafeAreaView>
+      </View>
 
 
 
@@ -159,7 +160,9 @@ style={{backgroundColor:colors.white}}>
 
       
       <View>
-      <Text style={{fontSize:30}}>Trending Question</Text>
+      <Text style={{fontSize:30,fontWeight:"bold",
+      color:colors.primary  
+    }}>Trending Question</Text>
       </View>
 
       <View style={{marginHorizontal:30,marginTop:5}}>
@@ -176,7 +179,7 @@ style={{backgroundColor:colors.white}}>
     <Corousel data={exampleItems} navigation={navigation}/> */}
 
     {/* corousel goes here */}
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+    <View style={{ flex: 1, backgroundColor: colors.white }}>
       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }}>
         <Carousel
          layout={'tinder'} layoutCardOffset={`9`}
@@ -190,13 +193,13 @@ style={{backgroundColor:colors.white}}>
           onSnapToItem={(index) => setActiveIndex(index)}
         />
       </View>
-    </SafeAreaView>
+    </View>
 
     
 
 
     <View style={{margin:20,marginTop:20}}>
-      <Text style={{fontSize:30}}>Trending Categories</Text>
+      <Text style={{fontSize:25,margin:10,fontWeight:"bold",color:colors.primary}}>Trending Categories</Text>
     </View>
 
     <View style={{margin:20,marginTop:-5}}>
@@ -209,7 +212,7 @@ style={{backgroundColor:colors.white}}>
     </ScrollView>
 
 
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -217,7 +220,7 @@ const styles = StyleSheet.create({
 
     container:{
   
-      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+      // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
       flex:1,
     
     },
@@ -228,7 +231,10 @@ const styles = StyleSheet.create({
     },
     headerContent : {
       color:"white",
-      fontSize:25,
+      fontSize:19,
+      fontWeight:"bold",
+      fontStyle:"italic",
+      textTransform:"capitalize",
       textAlign:"center",
     },
     root: {

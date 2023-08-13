@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import colors from '../Config/colors';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import { storage } from '../Config/firebase';
 import { auth } from '../Config/firebase';
@@ -138,7 +139,7 @@ export default function AddPostScreen({navigation}) {
       
 
   return (
-    <KeyboardAwareScrollView
+    <SafeAreaView
       style={styles.container}
       behavior="padding"
     >
@@ -207,19 +208,19 @@ export default function AddPostScreen({navigation}) {
       />
       </View>
       
-      <View style={{margin:30,marginBottom:60}}>
+      <View style={{margin:30,marginBottom:60,marginTop:-2}}>
       <FormBtn title="Post" onPress={check}/>
       </View>
 
       </ScrollView>
 
-    </KeyboardAwareScrollView>
+    </SafeAreaView>
   )
 }
 const styles = StyleSheet.create({
     container:{
     
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+        // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         flex:1,
       
       },
@@ -230,12 +231,15 @@ const styles = StyleSheet.create({
       },
       headerContent : {
         color:"white",
-        fontSize:25,
+        fontSize:19,
+        fontWeight:"bold",
+        fontStyle:"italic",
+        textTransform:"capitalize",
         textAlign:"center",
       },
       image:{
-          width:width/2,
-          height:height/3.5,
+          width:"85%",
+          height:height/4,
           margin:20,
           borderRadius:15
       }

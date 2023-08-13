@@ -1,5 +1,6 @@
 import { useState,useEffect } from 'react';
-import { View, Text,StyleSheet,SafeAreaView,StatusBar,Dimensions } from 'react-native'
+import { View, Text,StyleSheet,StatusBar,Dimensions } from 'react-native'
+import {SafeAreaView} from 'react-native-safe-area-context';
 import React from 'react'
 import colors from '../Config/colors';
 import MapView, { Callout, Circle, Marker } from "react-native-maps"
@@ -65,7 +66,7 @@ export default function MapScreen() {
 
 
   return (
-   <View style={styles.container}>
+   <SafeAreaView style={styles.container}>
 
      <View style={styles.header}>
 
@@ -141,14 +142,14 @@ export default function MapScreen() {
 
       </MapView>
 
-  </View>
+  </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   container:{
     
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     flex:1,
   
   },
@@ -159,7 +160,10 @@ const styles = StyleSheet.create({
   },
   headerContent : {
     color:"white",
-    fontSize:25,
+    fontSize:19,
+    fontWeight:"bold",
+    fontStyle:"italic",
+    textTransform:"capitalize",
     textAlign:"center",
   },
   map: {

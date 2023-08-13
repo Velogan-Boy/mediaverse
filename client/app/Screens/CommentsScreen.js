@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback, useState, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity ,Image,StatusBar,Alert} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 // import { Avatar } from 'react-native-elements';
 import { auth, db,db1} from '../Config/firebase';
 // import { signOut } from 'firebase/auth';
@@ -109,7 +110,7 @@ const Chat = ({ navigation,route }) => {
 
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
          {/* <Image source={{uri:"https://www.w3schools.com/howto/img_avatar.png"}} style={styles.avatarImg}/> */}
          <View style={styles.header}>
 
@@ -140,7 +141,7 @@ const Chat = ({ navigation,route }) => {
             }}
          
         />
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -149,7 +150,7 @@ export default Chat;
 const styles = StyleSheet.create({
       container:{
     
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+        // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         flex:1,
       
       },
@@ -160,9 +161,12 @@ const styles = StyleSheet.create({
       },
       headerContent : {
         color:"white",
-        fontSize:25,
+        fontSize:19,
+        fontWeight:"bold",
+        fontStyle:"italic",
+        textTransform:"capitalize",
         textAlign:"center",
-      }
+      },
 })
 
 

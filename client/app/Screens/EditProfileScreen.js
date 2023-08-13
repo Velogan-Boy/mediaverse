@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, ImageBackground, TextInput,StatusBar,Dimensions } from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -152,7 +153,7 @@ const EditProfileScreen = ({navigation}) => {
 
   return (
 
-    <KeyboardAwareScrollView
+    <SafeAreaView
       style={styles.container}
       behavior="padding"
     >
@@ -228,7 +229,7 @@ const EditProfileScreen = ({navigation}) => {
 
       
       </View>
-    </KeyboardAwareScrollView>
+    </SafeAreaView>
   )
 
 };
@@ -238,7 +239,7 @@ export default EditProfileScreen;
 const styles = StyleSheet.create({
   container:{
     
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     flex:1,
     height:height
   
@@ -250,7 +251,10 @@ const styles = StyleSheet.create({
   },
   headerContent : {
     color:"white",
-    fontSize:25,
+    fontSize:19,
+    fontWeight:"bold",
+    fontStyle:"italic",
+    textTransform:"capitalize",
     textAlign:"center",
   },
   commandButton: {

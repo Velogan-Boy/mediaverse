@@ -59,7 +59,7 @@ const LoginScreen = ({navigation}) => {
         source={require("../../assets/logowhite.png")}
         style={styles.logo}
       /> */}
-      <Text style={{textAlign: 'center', fontSize: 30, margin: 10,color:"white"}}>Log In</Text>
+      <Text style={{textAlign: 'center', fontSize: 30, margin: 20,color:"white"}}>Log In</Text>
       <FormInput
         labelValue={email}
         onChangeText={(userEmail) => setEmail(userEmail)}
@@ -83,11 +83,11 @@ const LoginScreen = ({navigation}) => {
         onPress={handleLogin}
       />
 
-      <TouchableOpacity style={styles.forgotButton} onPress={() => {}}>
+      {/* <TouchableOpacity style={styles.forgotButton} onPress={() => {}}>
         <Text style={styles.navButtonText}>Forgot Password?</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
-      {Platform.OS === 'android' ? (
+      {/* {Platform.OS === 'android' ? (
         <View>
 
           <SocialBtn
@@ -97,16 +97,16 @@ const LoginScreen = ({navigation}) => {
             backgroundColor="#f5e7ea"
             onPress={() => signInWithGoogleAsync()}
           />
-          {/* <SocialBtn
+          <SocialBtn
             buttonTitle="Sign In with Facebook"
             btnType="facebook"
             color="#4867aa"
             backgroundColor="#e6eaf4"
             // onPress={() => fbLogin()}
-          /> */}
+          />
 
         </View>
-      ) : null}
+      ) : null} */}
 
       <TouchableOpacity
         style={styles.forgotButton}

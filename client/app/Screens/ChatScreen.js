@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, StatusBar, Image, Dimensions, RefreshControl, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, Image, Dimensions, RefreshControl, TouchableOpacity, ScrollView } from 'react-native';
 import colors from '../Config/colors';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { db, auth } from '../Config/firebase';
 import axios from 'axios';
@@ -43,9 +44,17 @@ export default function ChatScreen({ navigation }) {
         <View style={styles.grp}>
           <Image source={{ uri: user.profileUrl }} style={styles.avatarImg} />
           <View style={styles.info}>
-            <Text style={styles.username}>{user.name}</Text>
+            <Text style={styles.username}
+            numberOfLines={1}
+            >
+              {
+                user.name?.length > 10 ? `${user.name.substring(0, 10)}...` : user.name
+              }
+              </Text>
             <Text numberOfLines={1} style={styles.lastMsg}>
-              {truncate(`${user.email}`)}
+              {
+                user.email?.length > 10 ? `${user.email.substring(0, 15)}...` : user.email
+              }
             </Text>
           </View>
         </View>
@@ -58,8 +67,8 @@ export default function ChatScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView>
+    <SafeAreaView style={styles.container}>
+      <View>
         <View style={styles.header}>
           <MaterialCommunityIcons name="chat" size={38} color={colors.light} style={{ margin: 8 }} />
           <Text style={styles.headerContent}>My Chats</Text>
@@ -69,6 +78,9 @@ export default function ChatScreen({ navigation }) {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
+          style={{
+            marginBottom: 70,
+          }}
         >
           {/* Global Chat */}
           <TouchableOpacity style={styles.chatView} onPress={() => navigation.navigate('ChatDetail')}>
@@ -91,14 +103,14 @@ export default function ChatScreen({ navigation }) {
             <React.Fragment key={index}>{renderChatItem(user)}</React.Fragment>
           ))}
         </ScrollView>
-      </SafeAreaView>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     flex: 1,
   },
   header: {
@@ -111,10 +123,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  headerContent: {
-    color: 'white',
-    fontSize: 25,
-    textAlign: 'center',
+  headerContent : {
+    color:"white",
+    fontSize:19,
+    fontWeight:"bold",
+    fontStyle:"italic",
+    textTransform:"capitalize",
+    textAlign:"center",
   },
   chatView: {
     marginTop: 15,

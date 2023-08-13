@@ -1,6 +1,7 @@
 //default apis
-import { View, Text,StyleSheet, SafeAreaView,StatusBar,Platform, TouchableOpacity, Image,Dimensions} from 'react-native'
+import { View, Text,StyleSheet,StatusBar,Platform, TouchableOpacity, Image,Dimensions} from 'react-native'
 import React from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 //icons
 import {MaterialCommunityIcons} from '@expo/vector-icons'
@@ -19,7 +20,7 @@ const AppBar = ({onPress1,onPress2}) => {
       </TouchableOpacity>
       <View style={styles.brand}>
          
-          <Image source={require("../../assets/images/mediaverse-logo-dark-horizontal.png")} style={styles.logo}/>
+          <Image source={require("../../assets/images/mediaverse-logo-horizontal.png")} style={styles.logo}/>
 
           
       </View>
@@ -35,7 +36,7 @@ export default AppBar;
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+        // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         backgroundColor:colors.primary,
         display:"flex",
         flexDirection:"row",

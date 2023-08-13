@@ -135,9 +135,12 @@ const styles = StyleSheet.create({
     display: "flex", flexDirection: "row", justifyContent: "center",
     marginTop: 27
   },
-  headerContent: {
-    color: "white",
-    fontSize: 25,
-    textAlign: "center",
+  headerContent : {
+    color:"white",
+    fontSize:19,
+    fontWeight:"bold",
+    fontStyle:"italic",
+    textTransform:"capitalize",
+    textAlign:"center",
   },
 })

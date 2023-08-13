@@ -25,9 +25,9 @@ export default function ForumScreen({navigation,route}) {
     <ScrollView>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primary, height: "100%", marginBottom: 10 }}>
         <Image source={{ uri: route.params.topic.cover}} style={styles.image} />
-        <Text style={{ flex: 1, alignItems: 'center', color: 'white', marginTop: 10, justifyContent: 'center', fontSize: 23 }}>{route.params.topic.name}</Text>
-        <Text style={{ flex: 1, alignItems: 'center', color: 'white', justifyContent: 'center', fontSize: 13 }}>{route.params.topic.count} Questions</Text>
-        <Text style={{ flex: 1, alignItems: 'center', color: 'white', marginTop: 0, justifyContent: 'center', fontSize: 14, marginBottom: 15, textAlign: 'center' }}>This is a forum to discuss about {route.params.topic.name}</Text>
+        <Text style={{ flex: 1, alignItems: 'center', color: 'white', marginTop: 10, justifyContent: 'center', fontSize: 23,fontWeight:"bold",textTransform:"capitalize" }}>{route.params.topic.name}</Text>
+        <Text style={{ flex: 1, alignItems: 'center', color: 'white', justifyContent: 'center', fontSize: 13,marginTop:10 }}>{route.params.topic.count} Question(s)</Text>
+        <Text style={{ flex: 1, alignItems: 'center', color: 'white', marginTop: 10, justifyContent: 'center', fontSize: 14, marginBottom: 15, textAlign: 'center' }}>This is a forum to discuss about {route.params.topic.name}</Text>
 
       </View>
       

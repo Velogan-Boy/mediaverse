@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, Image, FlatList,RefreshControl,TouchableHighlight,StatusBar,Dimensions, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useEffect,useState,useCallback } from 'react';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import { auth } from "../Config/firebase";
 import { FontAwesome5 } from '@expo/vector-icons';
 import colors from '../Config/colors'
@@ -130,7 +131,7 @@ export default function AccountScreen({ navigation,route }) {
   }
 
   return (
-    <ScrollView style={styles.container} >
+    <SafeAreaView style={styles.container} >
 
 
 
@@ -222,6 +223,7 @@ export default function AccountScreen({ navigation,route }) {
         style={{ borderWidth: StyleSheet.hairlineWidth, borderColor: 'black' }}
       />
       <View style={{margin:15}}>
+        
 
       <FlatList
         data={post}
@@ -242,14 +244,14 @@ export default function AccountScreen({ navigation,route }) {
 
       </ScrollView>
 
-    </ScrollView>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
     container:{
     
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     flex:1,
   
   },
@@ -260,7 +262,10 @@ const styles = StyleSheet.create({
   },
   headerContent : {
     color:"white",
-    fontSize:25,
+    fontSize:19,
+    fontWeight:"bold",
+    fontStyle:"italic",
+    textTransform:"capitalize",
     textAlign:"center",
   },
   // container: {

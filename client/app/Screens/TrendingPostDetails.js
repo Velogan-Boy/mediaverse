@@ -1,5 +1,6 @@
 import { View, Text,StyleSheet,StatusBar,Dimensions,Image, ScrollView } from 'react-native'
 import React,{useState,useEffect,useCallback} from 'react';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import colors from '../Config/colors';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import MyPost from '../Components/MyPost';
@@ -36,7 +37,7 @@ export default function PostDetailsScreen({navigation,route}) {
 
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
 
         <View style={styles.header}>
 
@@ -144,13 +145,13 @@ export default function PostDetailsScreen({navigation,route}) {
         </View>
 
 
-    </View>
+    </SafeAreaView>
   )
 }
 const styles = StyleSheet.create({
     container:{
     
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+        // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         flex:1,
       
       },
@@ -161,7 +162,10 @@ const styles = StyleSheet.create({
       },
       headerContent : {
         color:"white",
-        fontSize:25,
+        fontSize:19,
+        fontWeight:"bold",
+        fontStyle:"italic",
+        textTransform:"capitalize",
         textAlign:"center",
       },
 })

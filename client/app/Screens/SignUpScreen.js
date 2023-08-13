@@ -305,7 +305,7 @@ const registerForPushNotificationsAsync = async (uid,email,name,username) => {
         </TouchableOpacity>
 
       </View>
-
+{/* 
       {Platform.OS === 'android' ? (
         <View>
            <SocialBtn
@@ -315,16 +315,16 @@ const registerForPushNotificationsAsync = async (uid,email,name,username) => {
             backgroundColor="#f5e7ea"
             onPress={() => {signInWithGoogleAsync()}}
           />
-          {/* <SocialBtn
+          <SocialBtn
             buttonTitle="Sign Up with Facebook"
             btnType="facebook"
             color="#4867aa"
             backgroundColor="#e6eaf4"
             onPress={() => {}}
-          /> */}
+          />
          
         </View>
-      ) : null}
+      ) : null} */}
 
       <TouchableOpacity
         style={styles.navButton}
@@ -346,9 +346,9 @@ const styles = StyleSheet.create({
     
   },
   text: {
-    fontSize: 35,
-    marginBottom: 10,
-    marginTop:20,
+    fontSize: 30,
+    marginBottom: 13,
+    marginTop:60,
     color: colors.white,
     textAlign:"center"
   },

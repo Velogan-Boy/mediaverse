@@ -101,9 +101,12 @@ const styles = StyleSheet.create({
       },
       headerContent : {
         color:"white",
-        fontSize:25,
+        fontSize:19,
+        fontWeight:"bold",
+        fontStyle:"italic",
+        textTransform:"capitalize",
         textAlign:"center",
-      }
+      },
 })
 
 

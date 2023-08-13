@@ -11,6 +11,7 @@ import FollowersScreen from '../Screens/FollowersScreen';
 import FollowingScreen from '../Screens/FollowingScreen';
 import OtherAccountScreen from '../Screens/OtherAccountScreen';
 import TrendingPostDetailsScreen from '../Screens/TrendingPostDetails';
+import PostDetailsScreen from '../Screens/PostDetailsScreen';
 import CommentsScreen from '../Screens/CommentsScreen';
 
 
@@ -27,6 +28,7 @@ const AccountNavigator = () => {
       <Stack.Screen name="Following" component={FollowingScreen}/>
       <Stack.Screen name="OtherAccount" component={OtherAccountScreen}/>
       <Stack.Screen name="TrendingPostDetails" component={TrendingPostDetailsScreen}/>
+      <Stack.Screen name="PostDetails" component={PostDetailsScreen}/>
       <Stack.Screen name="Comments" component={CommentsScreen}/>
      
     </Stack.Navigator>

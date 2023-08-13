@@ -1,4 +1,5 @@
-import { View, Text,StyleSheet,StatusBar,Image,Dimensions,ScrollView,Button, Alert } from 'react-native'
+import { View, Text,StyleSheet,StatusBar,Image,Dimensions,ScrollView,Button, Alert } from 'react-native' 
+import {SafeAreaView} from 'react-native-safe-area-context';
 import React,{useState,useEffect} from 'react';
 import colors from '../Config/colors';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
@@ -8,6 +9,7 @@ import AnswerCard from '../Components/AnswerCard';
 import axios from 'axios';
 import host from '../Config/ip';
 import { auth } from '../Config/firebase';
+import CustomButton from '../Components/CustomButton';
 
 const {width,height} = Dimensions.get('window');
 
@@ -64,6 +66,7 @@ export default function QuestionViewScreen({navigation,route}) {
   console.log("answers",question.answers)
 
   return (
+    <SafeAreaView style={{flex:1,backgroundColor:colors.white}}>
     <ScrollView
    style={styles.container}
     >
@@ -92,7 +95,7 @@ export default function QuestionViewScreen({navigation,route}) {
       
       </View>
 
-      <View style={{height:200,margin:10}}>
+      <View style={{height:175,margin:10}}>
 
       <Question title={question.question} description={question.description} time={question.createdAt}/>
 
@@ -101,7 +104,11 @@ export default function QuestionViewScreen({navigation,route}) {
 
       {/* base view */}
     <View style={{marginTop:15,margin:10}}>
-          <Text style={{fontSize:25}}>People Thoughts</Text>
+          <Text style={{fontSize:20,
+          fontWeight:"bold",
+          margin:10,
+          }}>People Thoughts</Text>
+
           <ScrollView horizontal={true}>
 
           { question.answers && question.answers.map((answer) => 
@@ -109,7 +116,7 @@ export default function QuestionViewScreen({navigation,route}) {
           )}
 
           {question.answers && question.answers.length == 0 && 
-          <Text style={{fontSize:20,textAlign:"center"}}>No Answers Yet</Text>
+          <Text style={{fontSize:18,margin:10,textAlign:"center"}}>No Answers Yet</Text>
           }
           
          
@@ -122,8 +129,13 @@ export default function QuestionViewScreen({navigation,route}) {
     <View style={{margin:20}}>
 
     {answer?
-    <View style={{height:30,width:100,alignSelf:"flex-end",margin:10}}>
-    <Button title="send" onPress={() => handleAnswer()} color={colors.primary} />
+    <View style={{height:60,width:10,margin:10,alignSelf:"flex-end",marginRight:90}}>
+      <CustomButton
+            size={40}
+            type="plus-circle"
+            style={{height:80,width:80}}
+            onPress={() => handleAnswer()}
+          />
     </View>
     :null}
 
@@ -139,12 +151,13 @@ export default function QuestionViewScreen({navigation,route}) {
     </View>
 
     </ScrollView>
+    </SafeAreaView>
   )
 }
 const styles = StyleSheet.create({
     container:{
     
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+        // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         flex:1,
       
       },
@@ -153,13 +166,23 @@ const styles = StyleSheet.create({
         display:"flex",flexDirection:"row",justifyContent:"center"
     
       },
+      // headerContent : {
+      //   color:"white",
+      //   fontSize:25,
+      //   textAlign:"center",
+      // },
       headerContent : {
         color:"white",
-        fontSize:25,
+        fontSize:19,
+        fontWeight:"bold",
+        fontStyle:"italic",
+        textTransform:"capitalize",
         textAlign:"center",
       },
       untext:{
-        fontSize:25,
+        fontSize:20,
+        fontWeight:"bold",
+        textTransform:"capitalize",
         color:colors.dark,
         marginLeft:20,
         marginTop:20

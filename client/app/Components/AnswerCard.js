@@ -22,6 +22,7 @@ const AnswerCard = ({name,profileImg,content}) => {
 
       <Image source={{uri:profileImg}} style={styles.image}/>
       <View style={styles.textContainer}>
+          <Text style={{color:dark?colors.white:colors.black,...styles.authorName}}>{""}</Text>
           <Text style={{color:dark?colors.white:colors.black,...styles.authorName}}>{name}</Text>
           <Text style={{color:dark?colors.white:colors.black,...styles.authorRating}}>{""}</Text>
       </View>
@@ -29,7 +30,7 @@ const AnswerCard = ({name,profileImg,content}) => {
       </View>
          
       <View style={styles.content}>
-      <Text style={{color:dark?colors.white:colors.black,...styles.contentText}} numberOfLines={5}>{content}</Text>
+      <Text style={{color:dark?colors.white:colors.black,...styles.contentText}} numberOfLines={3}>{content}</Text>
       </View>    
        {/* modal */}
        <Modal
@@ -45,13 +46,14 @@ const AnswerCard = ({name,profileImg,content}) => {
         
       <View style={styles.centeredView}>
       <View style={styles.modalView}>
-      <Text style={styles.modalText}>{name}</Text>
+      {/* <Text style={styles.modalText}>{name}</Text> */}
 
       <View style={{height:height/1.4,marginBottom:10,...styles.container}}>
         <ScrollView>
       <View style={styles.grp1}>
       <Image source={{uri:profileImg}} style={styles.image}/>
       <View style={styles.textContainer}>
+          <Text style={{color:dark?colors.white:colors.black,...styles.authorName}}>{""}</Text>
           <Text style={{color:dark?colors.white:colors.black,...styles.authorName}}>{name}</Text>
           <Text style={{color:dark?colors.white:colors.black,...styles.authorRating}}>{""}</Text>
       </View>
@@ -94,7 +96,7 @@ const styles = StyleSheet.create({
       maxWidth:210
     },
     authorName:{
-        fontSize:20,textTransform:"capitalize",fontWeight:"bold"
+        fontSize:18,textTransform:"capitalize",fontWeight:"bold",textAlign:"center"
     },
     authorRating:{
       fontSize:18,fontWeight:"bold"
@@ -103,7 +105,9 @@ const styles = StyleSheet.create({
       margin:20
     },
     contentText:{
-      fontSize:17,letterSpacing:1,lineHeight:24
+      fontSize:16,letterSpacing:1,lineHeight:24,
+      textAlign:"justify",
+      marginTop:10
     },
     modalView: {
       margin: 10,

@@ -8,7 +8,9 @@ export default function Question({ onPress,title,description,time }) {
     <TouchableWithoutFeedback onPress={onPress}>
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.qntitle}>{title}</Text>
+        <Text style={styles.qntitle}
+      
+        >{title}</Text>
         <View style={styles.headerRight}>
           <Text style={[styles.dateText, { color: 'black' }]}>{dateTimeAgo}</Text>
         </View>
@@ -34,19 +36,24 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   qntitle: {
-    fontSize: 23,
+    fontSize: 16,
     color: 'black',
     paddingHorizontal: 10,
     marginTop: 10,
     fontWeight: '450',
-    marginBottom: 10
+    marginBottom: 10,
+    maxWidth: '85%',
+    fontWeight: 'bold',
+    fontStyle: 'italic',
   },
   qndes: {
-    fontSize: 15,
+    fontSize: 14,
     color: 'black',
     paddingHorizontal: 10,
     marginTop: 10,
     marginBottom: 5,
+    letterSpacing: 0.5,
+    lineHeight: 20,
   },
   headerRight: {
     flexDirection: 'row'

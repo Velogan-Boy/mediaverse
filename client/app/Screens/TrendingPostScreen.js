@@ -1,12 +1,12 @@
 import { View, Text,StyleSheet,StatusBar } from 'react-native'
 import React from 'react'
-
+import { SafeAreaView } from 'react-native-safe-area-context'
 import colors from '../Config/colors'
 import {MaterialCommunityIcons} from '@expo/vector-icons'
 
 export default function TrendingPostScreen() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
 
      <View style={styles.header}>
 
@@ -15,7 +15,7 @@ export default function TrendingPostScreen() {
 
     </View>
 
-    </View>
+    </SafeAreaView>
 
   )
 }
@@ -23,7 +23,7 @@ export default function TrendingPostScreen() {
 const styles = StyleSheet.create({
     container:{
     
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+        // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         flex:1,
       
       },
@@ -34,7 +34,10 @@ const styles = StyleSheet.create({
       },
       headerContent : {
         color:"white",
-        fontSize:25,
+        fontSize:19,
+        fontWeight:"bold",
+        fontStyle:"italic",
+        textTransform:"capitalize",
         textAlign:"center",
       },
 })

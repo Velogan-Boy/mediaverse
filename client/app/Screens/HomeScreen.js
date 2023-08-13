@@ -70,26 +70,24 @@ export default function HomeScreen({navigation,route}) {
     }
   };
 
+  const getLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      setErrorMsg('Permission to access location was denied');
+    } else {
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+      console.log('here is ', location);
+      updatelocation(location);
+    }
+  };
+
   useEffect(() => {
-    const getLocation = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-      } else {
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-        console.log('here is ', location);
-        updatelocation(location);
-      }
-    };
+    
 
     getLocation();
+    allPost();
 
-    const unsubscribe = navigation.addListener('focus', () => {
-      allPost();
-    });
-
-    return () => unsubscribe();
   }, []);
 
   
@@ -104,7 +102,7 @@ export default function HomeScreen({navigation,route}) {
 
   
   return (
-    <View style={{backgroundColor:colors.light}}>
+    <View style={{backgroundColor:colors.white}}>
       <OfflineStatus/>
       <SafeAreaView>
       <AppBar

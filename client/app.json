@@ -15,7 +15,7 @@
       ]
     ],
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/images/mediaverse-logo-dark.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

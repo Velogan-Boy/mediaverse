@@ -1,6 +1,7 @@
 //default apis
 import { View, Text ,StyleSheet,StatusBar,Platform,ScrollView, TouchableNativeFeedback, Image,Dimensions} from 'react-native';
 import React, { useEffect,useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 //components
 
@@ -55,7 +56,7 @@ const AccountSearchResults = ({route,navigation}) => {
     
 
   return (
-    <View style={{backgroundColor:isDark?colors.dark:colors.light,...styles.container}}>
+    <SafeAreaView style={{backgroundColor:isDark?colors.dark:colors.white,...styles.container}}>
        <ActivityIndicator visible={loading}/>
        <OfflineStatus/>
        {empty===true? <View style={styles.overlay}>
@@ -73,7 +74,11 @@ const AccountSearchResults = ({route,navigation}) => {
       {/* base view */}
       <View style={{margin:10,maxHeight:height/1.139}}>
         
-      <ScrollView>
+      <ScrollView
+      style={{
+        marginBottom:27
+      }}
+      >
 
       {accounts.map(data => 
         <TouchableNativeFeedback onPress={()=> navigation.navigate("OtherAccount",{"id":data._id})}>
@@ -83,7 +88,13 @@ const AccountSearchResults = ({route,navigation}) => {
                   <View style={styles.textContainer}>
                   {/* <Text style={styles.movieTitle}>{movie.gender?movie.name:null}</Text>   */}
                   <Text style={styles.movieTitle}>{data.fname}</Text>
-                  <Text style={styles.info}>{data.email}</Text>     
+                  <Text style={styles.info}>
+                    
+                    {
+                      data.email.length>20?data.email.substring(0,20)+"...":data.email
+                    }
+                  
+                  </Text>     
    
               </View>
               </View>
@@ -95,7 +106,7 @@ const AccountSearchResults = ({route,navigation}) => {
           
       </ScrollView>
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -103,7 +114,7 @@ export default AccountSearchResults;
 
 const styles = StyleSheet.create({
   container : {
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     height: "100%",
     backgroundColor:colors.white,
     maxHeight: "100%",
@@ -113,14 +124,17 @@ const styles = StyleSheet.create({
   },
   headerContent : {
     color:"white",
-    fontSize:35,
+    fontSize:19,
+    fontWeight:"bold",
+    fontStyle:"italic",
+    textTransform:"capitalize",
     textAlign:"center",
   },
   image : {
     height:200,width:140,borderRadius:15,marginTop:18,margin:15,marginLeft:30
   },
   outline : {
-    height:190,width:"95%",backgroundColor:colors.primary,marginTop:-190,zIndex:-2,marginHorizontal:10,
+    height:190,width:"95%",backgroundColor:colors.final,marginTop:-190,zIndex:-2,marginHorizontal:10,
     borderRadius:15,
   },
   textContainer : {
@@ -134,13 +148,16 @@ const styles = StyleSheet.create({
       marginTop:20,    
   },
   movieTitle: {
-      fontSize:22,
-      color:colors.white,
-  },
+    fontSize:18,
+    fontWeight:"bold",
+    textTransform:"capitalize",
+    color:colors.white,
+    marginRight:10,
+},
   info : {
-      marginRight:30,
+      marginRight:15,
       marginTop:3,
-      fontSize:15,
+      fontSize:14,
       color:colors.white,
   },
   rating : {

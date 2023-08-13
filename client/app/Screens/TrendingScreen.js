@@ -1,8 +1,10 @@
-import { View, StyleSheet, StatusBar, FlatList, SafeAreaView ,Text, TouchableWithoutFeedback, Touchable, TouchableOpacity} from 'react-native'
+import { View, StyleSheet, StatusBar, FlatList ,Text, TouchableWithoutFeedback, Touchable, TouchableOpacity} from 'react-native'
 import React, { useEffect,useState } from 'react';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import ImagedCarouselCard from "react-native-imaged-carousel-card";
 import GestureFlipView from 'react-native-gesture-flip-card';
 import MyCard from '../Components/MyCard';
+
 import colors from '../Config/colors';
 import axios from 'axios';
 import host from '../Config/ip';
@@ -89,7 +91,7 @@ export default function TrendingScreen({navigation}) {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
 
 <MaterialCommunityIcons name="rocket-launch" size={38} color={colors.light} style={{margin:8}}/>
@@ -110,7 +112,7 @@ export default function TrendingScreen({navigation}) {
 
       </SafeAreaView>
 
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -118,7 +120,7 @@ const styles = StyleSheet.create({
 
   container: {
 
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     flex: 1,
 
   },
@@ -151,7 +153,7 @@ const styles = StyleSheet.create({
   },
   container:{
   
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     flex:1,
   
   },
@@ -160,11 +162,14 @@ const styles = StyleSheet.create({
     display:"flex",flexDirection:"row",justifyContent:"center"
 
   },
-  headerContent : {
-    color:"white",
-    fontSize:25,
-    textAlign:"center",
-  },
+    headerContent : {
+        color:"white",
+        fontSize:19,
+        fontWeight:"bold",
+        fontStyle:"italic",
+        textTransform:"capitalize",
+        textAlign:"center",
+      },
   title: {
       fontSize: 28,
       marginLeft:20,

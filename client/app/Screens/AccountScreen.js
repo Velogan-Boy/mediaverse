@@ -1,5 +1,6 @@
 import { View, Text,Alert, StyleSheet, Image, FlatList,RefreshControl, TouchableHighlight,StatusBar,Dimensions, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useEffect,useState,useCallback } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { auth } from "../Config/firebase";
 import { FontAwesome5 } from '@expo/vector-icons';
 import colors from '../Config/colors'
@@ -134,7 +135,8 @@ export default function AccountScreen({ navigation }) {
 
 
   return (
-    <ScrollView style={styles.container} >
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+    <View style={styles.container} >
 
 {/* {out &&
       <LottieView
@@ -220,7 +222,7 @@ export default function AccountScreen({ navigation }) {
       </View>
       
   
-      <Text style={{ fontSize: 25, color: 'black', paddingHorizontal: 10, marginTop: 10, fontWeight: '450', marginBottom: 20 }}> Gallery </Text>
+      <Text style={{ fontSize: 25, color: 'black', paddingHorizontal: 10, marginTop: 10, fontWeight: 'bold', marginBottom: 20 }}> Gallery </Text>
       <View
         style={{ borderWidth: StyleSheet.hairlineWidth, borderColor: 'black' }}
       />
@@ -254,14 +256,15 @@ export default function AccountScreen({ navigation }) {
 
       </ScrollView>
 
-    </ScrollView>
+    </View>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
     container:{
     
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     flex:1,
   
   },
@@ -272,7 +275,10 @@ const styles = StyleSheet.create({
   },
   headerContent : {
     color:"white",
-    fontSize:25,
+    fontSize:19,
+    fontWeight:"bold",
+    fontStyle:"italic",
+    textTransform:"capitalize",
     textAlign:"center",
   },
   logout: {
