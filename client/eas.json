@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">= 3.14.0"
+    "version": ">= 4.1.2"
   },
   "build": {
     "development": {
@@ -8,14 +8,9 @@
       "distribution": "internal"
     },
     "preview": {
-      "android": {
+       "android": {
         "buildType": "apk"
-      }
-    },
-    "preview2": {
-      "android": {
-        "gradleCommand": ":app:assembleRelease"
-      }
+       }
     },
     "production": {}
   },

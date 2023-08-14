@@ -85,8 +85,8 @@ export default function HomeScreen({navigation,route}) {
   useEffect(() => {
     
 
-    getLocation();
     allPost();
+    getLocation();
 
   }, []);
 
